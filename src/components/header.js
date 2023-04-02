@@ -1,8 +1,6 @@
 import { useState, useRef } from 'react'
 import { Menu, Icon } from 'semantic-ui-react'
 
-//https://qiita.com/G4RDSjp/items/58364a6655d4968a90d9
-
 const handleClickSiteName = () => {
   console.log('clicked.')
 }
@@ -23,21 +21,25 @@ function SiteHeader() {
 
   const [isShown, setIsShown] = useState(false)
 
-  const handelToggleMenu = () => {
+  const handelToggleMenu = (e) => {
+    console.log('menu clicked.')
     setIsShown(!isShown)
+    if(!isShown) {
+    //Reactの合成イベントに対する親要素へのイベントの伝搬を抑止する
+    //menuをクリックした際に親要素のdocumentのリスナーが即時発火してしまうことを抑止
+    e.stopPropagation()
     document.addEventListener('click', documentClickHander)  
+    }
   }
 
-  const documentClickHander = e => {
-//    if(headerMenuRef.current.containts(e.target)){
-//      return
-//    }
+  const headerMenuRef = useRef()
+
+  const documentClickHander = (e) => {
+    console.log('document clicked.')
 
     setIsShown(false)
     document.removeEventListener('click', documentClickHander)
   }
-
-  const headerMenuRef = useRef()
 
   return (
     <>
