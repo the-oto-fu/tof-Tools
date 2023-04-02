@@ -1,5 +1,5 @@
-import { useState, useRef } from 'react'
-import { Menu, Icon } from 'semantic-ui-react'
+import { useState, useRef, useEffect } from 'react'
+import { Menu, Icon, Sticky } from 'semantic-ui-react'
 
 const handleClickSiteName = () => {
   console.log('clicked.')
@@ -20,25 +20,29 @@ function HeaderMenu() {
 function SiteHeader() {
 
   const [isShown, setIsShown] = useState(false)
+  const headerMenuRef = useRef()
+  //  const documentClickHandler = useRef()
+
 
   const handelToggleMenu = (e) => {
     console.log('menu clicked.')
     setIsShown(!isShown)
-    if(!isShown) {
-    //Reactの合成イベントに対する親要素へのイベントの伝搬を抑止する
-    //menuをクリックした際に親要素のdocumentのリスナーが即時発火してしまうことを抑止
-    e.stopPropagation()
-    document.addEventListener('click', documentClickHander)  
+    if (!isShown) {
+      //Reactの合成イベントに対する親要素へのイベントの伝搬を抑止する
+      //menuをクリックした際に親要素のdocumentのリスナーが即時発火してしまうことを抑止
+      e.stopPropagation()
+      document.addEventListener('click', documentClickHandler)
     }
   }
 
-  const headerMenuRef = useRef()
-
-  const documentClickHander = (e) => {
+  const documentClickHandler = (e) => {
     console.log('document clicked.')
+    if (headerMenuRef.current.contains(e.target)) {
+      return
+    }
 
     setIsShown(false)
-    document.removeEventListener('click', documentClickHander)
+    document.removeEventListener('click', documentClickHandler)
   }
 
   return (
@@ -58,10 +62,11 @@ function SiteHeader() {
           </Menu.Item>
         </Menu.Menu>
       </Menu>
-      <div className={`headerMenu ${isShown ? 'shown' : ''}`}
+      <div
+        className='header-menu'
         ref={headerMenuRef}
       >
-        <HeaderMenu />
+        {isShown ? <HeaderMenu /> : null}
       </div>
     </>
   )

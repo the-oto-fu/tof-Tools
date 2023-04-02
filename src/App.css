@@ -2,16 +2,13 @@
   text-align: center;
 }
 
-.headerMenu {
-  transform: scale(0);
-  transform-origin: top right;
-  transition: transform 0.2s;
+.header-menu {
   position:absolute;
   z-index: 500;
   top: 8%;
   right: 1%;
 }
 
-.headerMenu.shown {
-  transform: scale(1);
+.container.main {
+  margin-top: 7em;
 }
