@@ -1,28 +1,34 @@
-import { useState, useRef, useEffect } from 'react'
-import { Menu, Icon, Sticky } from 'semantic-ui-react'
+import { useState, useRef } from 'react'
+import { Menu, Icon } from 'semantic-ui-react'
+import { motion, AnimatePresence } from 'framer-motion'
 
 const handleClickSiteName = () => {
-  console.log('clicked.')
+
 }
 
 function SiteHeader() {
 
   const [isShown, setIsShown] = useState(false)
   const headerMenuRef = useRef()
-  //  const documentClickHandler = useRef()
 
   function HeaderMenu() {
     return (
-      <Menu vertical>
-        <Menu.Item onClick={handleMenuContentClick}>Visit another website</Menu.Item>
-        <Menu.Item>Link via prop</Menu.Item>
-        <Menu.Item>Javascript Link</Menu.Item>
-      </Menu>
+      <motion.div
+        animate={{ opacity: 1 }}
+        initial={{ opacity: 0 }}
+        exit={{ opacity: 0 }}
+        transition={{ duration: 0.2 }}
+      >
+        <Menu vertical>
+          <Menu.Item onClick={handleMenuContentClick}>Visit another website</Menu.Item>
+          <Menu.Item>Link via prop</Menu.Item>
+          <Menu.Item>Javascript Link</Menu.Item>
+        </Menu>
+      </motion.div>
     )
-  }  
+  }
 
   const handleToggleMenu = (e) => {
-    console.log('menu clicked.')
     setIsShown(!isShown)
     if (!isShown) {
       //Reactの合成イベントに対する親要素へのイベントの伝搬を抑止する
@@ -33,7 +39,6 @@ function SiteHeader() {
   }
 
   const documentClickHandler = (e) => {
-    console.log('document clicked.')
     if (headerMenuRef.current.contains(e.target)) {
       return
     }
@@ -65,11 +70,14 @@ function SiteHeader() {
           </Menu.Item>
         </Menu.Menu>
       </Menu>
+
       <div
         className='header-menu'
         ref={headerMenuRef}
       >
-        {isShown ? <HeaderMenu /> : null}
+        <AnimatePresence>
+          {isShown ? <HeaderMenu /> : null}
+        </AnimatePresence>
       </div>
     </>
   )

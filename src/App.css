@@ -3,10 +3,10 @@
 }
 
 .header-menu {
-  position:absolute;
+  position: fixed;
   z-index: 500;
-  top: 8%;
-  right: 1%;
+  top: 50px;
+  right: 0.5vw;
 }
 
 .container.main {
