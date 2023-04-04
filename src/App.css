@@ -2,13 +2,18 @@
   text-align: center;
 }
 
-.header-menu {
-  position: fixed;
-  z-index: 500;
-  top: 50px;
-  right: 0.5vw;
+.App-Header {
+  position: sticky;
+  position: -webkit-sticky;
+  top: 0;
 }
 
-.container.main {
-  margin-top: 7em;
+.App-Header > .ui.menu {
+  border-radius: 0 !important;
+}
+
+.header-menu {
+  position: absolute;
+  z-index: 500;
+  right: 0.5vw;
 }

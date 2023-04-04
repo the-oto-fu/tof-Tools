@@ -1,4 +1,5 @@
 import React from 'react'
+import { Container } from 'semantic-ui-react'
 
 const Minikuji = () => {
     var numbers = [1, 2, 3, 4, 5, 6, 7, 8, 9];
@@ -122,8 +123,12 @@ const Minikuji = () => {
 
   return (
     <>
-    <div id="minikuji">
-    </div>
+      <Container className='main'>
+        <div id="minikuji">
+          みにくじ準備中！
+        </div>
+
+      </Container>
     {/*
         <img src="minikuji/Retry.png" id="retry" onClick={init()}></img>
     */}
