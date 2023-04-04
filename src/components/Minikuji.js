@@ -124,7 +124,9 @@ const Minikuji = () => {
     <>
     <div id="minikuji">
     </div>
-    <img src="minikuji/Retry.png" id="retry" onClick="init()"></img>
+    {/*
+        <img src="minikuji/Retry.png" id="retry" onClick={init()}></img>
+    */}
     </>
   )
 }
