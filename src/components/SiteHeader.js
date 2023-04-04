@@ -1,15 +1,17 @@
 import { useState, useRef } from 'react'
 import { Menu, Icon } from 'semantic-ui-react'
 import { motion, AnimatePresence } from 'framer-motion'
-
-const handleClickSiteName = () => {
-
-}
+import { useNavigate } from 'react-router-dom'
 
 function SiteHeader() {
 
   const [isShown, setIsShown] = useState(false)
   const headerMenuRef = useRef()
+  const navigate = useNavigate();
+
+  const handleClickSiteName = () => {
+    navigate('/');
+  }
 
   function HeaderMenu() {
     return (
@@ -20,7 +22,7 @@ function SiteHeader() {
         transition={{ duration: 0.2 }}
       >
         <Menu vertical>
-          <Menu.Item onClick={handleMenuContentClick}>Visit another website</Menu.Item>
+          <Menu.Item onClick={handleMenuContentClick}>みにくじ</Menu.Item>
           <Menu.Item>Link via prop</Menu.Item>
           <Menu.Item>Javascript Link</Menu.Item>
         </Menu>
@@ -29,6 +31,7 @@ function SiteHeader() {
   }
 
   const handleToggleMenu = (e) => {
+    console.log('menu clicked.')
     setIsShown(!isShown)
     if (!isShown) {
       //Reactの合成イベントに対する親要素へのイベントの伝搬を抑止する
@@ -39,6 +42,7 @@ function SiteHeader() {
   }
 
   const documentClickHandler = (e) => {
+    console.log('document clicked.')
     if (headerMenuRef.current.contains(e.target)) {
       return
     }
@@ -49,6 +53,7 @@ function SiteHeader() {
 
   const handleMenuContentClick = () => {
     console.log('menu content clicked.')
+    navigate('/minikuji')
     setIsShown(false)
     document.removeEventListener('click', documentClickHandler)
   }
