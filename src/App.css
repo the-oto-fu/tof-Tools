@@ -17,3 +17,8 @@
   z-index: 500;
   right: 0.5vw;
 }
+
+.image-preview {
+  width: 200px;
+  height: auto;
+}

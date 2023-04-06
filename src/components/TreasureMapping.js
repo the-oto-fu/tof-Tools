@@ -1,11 +1,12 @@
 import React, { useState, useRef } from "react";
-import { Button, Container, Table } from 'semantic-ui-react'
+import { Button, Container, Dimmer, Loader } from 'semantic-ui-react'
 import axios from 'axios';
 
 let reader = new FileReader();
 
 const TreasureMapping = () => {
   const [imageFile, setImageFile] = useState();
+  const [isAnalysing, setIsAnalysing] = useState(false);
   const [treasurePosition, setTrasurePotision] = useState();
 
   const imageFileinputRef = useRef();
@@ -26,29 +27,29 @@ const TreasureMapping = () => {
   }
 
   const identifyTreasurePosition = () => {
+    setIsAnalysing(true);
+    //この時点でisAnalysingをログに出してもfalseであり、ロード表示が遅れる。stateが即時反映されていない模様。
     setTrasurePotision();
     axios.post('https://8i7ttdp7w5.execute-api.ap-northeast-1.amazonaws.com/stage/g15',
-    {mapImage: getBase64Image()}
+      { mapImage: getBase64Image() }
     )
-    .then((response) => {
+      .then((response) => {
         setTrasurePotision(response.data);
+        setIsAnalysing(false);
       })
   }
 
-  const AfterLoadingContent = () => (
-    <>
-      {treasurePosition.position}
-    </>
-  );
-
   return (
     <>
+      {isAnalysing 
+      ? <Dimmer active inverted><Loader>座標特定中…</Loader></Dimmer>
+      : null}
       <Container>
         <Button onClick={handleClickImageSelect}>画像を選択</Button>
         <input
           type="file"
           id="inputfile"
-          accept=".png,.jpeg"
+          accept=".png,.jpg,.jpeg"
           ref={imageFileinputRef}
           onChange={(e) => handleChangeImageFileInput(e)}
           hidden
@@ -57,17 +58,18 @@ const TreasureMapping = () => {
 
       <Container>
         {imageFile ?
-          <img id="image-preview" src={imageFile} />
+          <>
+            <img className="image-preview" src={imageFile} />
+            <Container>
+              <Button onClick={identifyTreasurePosition}>座標を特定!</Button>
+            </Container>
+          </>
           : null
         }
       </Container>
 
       <Container>
-        <Button onClick={identifyTreasurePosition}>座標を特定!</Button>
-      </Container>
-
-      <Container>
-      {treasurePosition != null ? <AfterLoadingContent /> : null}
+        {treasurePosition != null ? <>{treasurePosition.position}</> : null }
       </Container>
     </>
   )
