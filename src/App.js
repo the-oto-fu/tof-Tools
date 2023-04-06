@@ -1,8 +1,9 @@
-import { Route, Routes, useLocation, useNavigate } from 'react-router-dom'
+import { Route, Routes, useLocation } from 'react-router-dom'
 import './App.css';
 import SiteHeader from './components/SiteHeader';
 import Top from './components/Top'
 import Minikuji from './components/Minikuji';
+import TreasureMapping from './components/TreasureMapping';
 
 function App() {
   const location = useLocation();
@@ -17,6 +18,8 @@ function App() {
           <Route path={'/'} element={<Top
           />} />
           <Route path={'/minikuji'} element={<Minikuji
+          />} />
+          <Route path={'/treasuremapping'} element={<TreasureMapping
           />} />
         </Routes>
       </div>

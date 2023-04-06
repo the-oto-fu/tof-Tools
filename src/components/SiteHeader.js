@@ -23,7 +23,7 @@ function SiteHeader() {
       >
         <Menu vertical>
           <Menu.Item onClick={() => handleMenuContentClick('/minikuji')}>みにくじ</Menu.Item>
-          <Menu.Item>宝の地図画像判定</Menu.Item>
+          <Menu.Item onClick={() => handleMenuContentClick('/treasuremapping')}>宝の地図画像判定</Menu.Item>
         </Menu>
       </motion.div>
     )
@@ -44,6 +44,7 @@ function SiteHeader() {
       //Reactの合成イベントに対する親要素へのイベントの伝搬を抑止する
       //menuをクリックした際に親要素のdocumentのリスナーが即時発火してしまうことを抑止
       e.stopPropagation();
+      //document要素=画面全範囲をクリックした際の処理を設定
       document.addEventListener('click', documentClickHandler.current);
     }
   }
