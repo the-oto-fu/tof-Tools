@@ -22,28 +22,30 @@ const TreasureMapping = () => {
     };
   }
 
+  const resizeImage = (imageData) => {
+    const canvas = document.createElement('canvas');
+    //canvas
+  }
+
   const getBase64Image = () => {
-    return imageFile.split(/data:.*\/.*;base64,/)[1];
+    const tmp64img = imageFile.split(/^data:\w+\/\w+;base64,/)[1];
+    return tmp64img;
   }
 
   const identifyTreasurePosition = () => {
     setIsAnalysing(true);
-    //この時点でisAnalysingをログに出してもfalseであり、ロード表示が遅れる。stateが即時反映されていない模様。
     setTrasurePotision();
-    axios.post('https://8i7ttdp7w5.execute-api.ap-northeast-1.amazonaws.com/stage/g15',
+      axios.post('https://8i7ttdp7w5.execute-api.ap-northeast-1.amazonaws.com/stage/g15',
       { mapImage: getBase64Image() }
     )
       .then((response) => {
         setTrasurePotision(response.data);
         setIsAnalysing(false);
-      })
+      });
   }
 
   return (
     <>
-      {isAnalysing 
-      ? <Dimmer active inverted><Loader>座標特定中…</Loader></Dimmer>
-      : null}
       <Container>
         <Button onClick={handleClickImageSelect}>画像を選択</Button>
         <input
@@ -69,7 +71,10 @@ const TreasureMapping = () => {
       </Container>
 
       <Container>
-        {treasurePosition != null ? <>{treasurePosition.position}</> : null }
+        {isAnalysing
+          ? <Dimmer active inverted><Loader>座標特定中…</Loader></Dimmer>
+          : null}
+        {treasurePosition != null ? <>{treasurePosition.position}</> : null}
       </Container>
     </>
   )
