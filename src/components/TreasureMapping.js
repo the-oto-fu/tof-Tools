@@ -71,7 +71,7 @@ const TreasureMapping = () => {
         />
       </Container>
 
-      {isCameraOn ? <Camera cameraOff={() => cameraOff()}/> : null}
+      {isCameraOn ? <Camera setImageFile={(imagefile) => setImageFile(imagefile)} cameraOff={() => cameraOff()}/> : null}
 
       <Container>
         {imageFile ?

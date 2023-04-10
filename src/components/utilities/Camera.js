@@ -18,7 +18,6 @@ const Camera = (props) => {
       } catch (e) {
         setStreamError(e);
       }
-      return { stream, error: streamError };
     };
 
     getUserMedia();
@@ -43,35 +42,37 @@ const Camera = (props) => {
       node.srcObject = stream;
     }
     videoRef.current = node;
-  })
+  }, [stream])
 
   const takepicture = () => {
-    const context = canvasRef.getContext("2d");
-    canvasRef.width = 300;
-    canvasRef.height = 300;
-    context.drawImage(videoRef.current, 0, 0, 300, 300);
-    const data = canvasRef.toDataURL("image/png");
+    const context = canvasRef.current.getContext("2d");
+    canvasRef.current.width = 300;
+    canvasRef.current.height = 300;
+    context.drawImage(videoRef.current, 0, 0, 300, 300, 0, 0, 300, 300);
+    cancel();
+    props.setImageFile(canvasRef.current.toDataURL("image/png"));
   }
 
   return (
-    <div className="camera-capture">
+    <div className="camera">
       {streamError ? (
         <Message negative>
           <Message.Header>カメラの起動でエラーが発生しました</Message.Header>
           <p>{streamError.message}</p>
         </Message>
       ) : null}
-      <h1>Hello GetUserMedia</h1>
-      <canvas id="canvas" ref={canvasRef}> </canvas>
       {stream ? (
         <>
-          <Button onClick={() => cancel()}>カメラ終了</Button>
+          <Button onClick={cancel}>カメラ終了</Button>
+          <Button onClick={takepicture}>画像キャプチャ</Button>
           <video
             autoPlay
             ref={callbackVideoRef}
           />
+          <div className="capture-frame"></div>
         </>
       ) : null}
+      <canvas id="canvas" ref={canvasRef} hidden />
     </div>
   );
 }
