@@ -1,6 +1,7 @@
-import React, { useState, useRef } from "react";
+import { useState, useRef } from "react";
 import { Button, Container, Dimmer, Loader } from 'semantic-ui-react'
 import axios from 'axios';
+import Camera from './utilities/Camera';
 
 let reader = new FileReader();
 
@@ -8,10 +9,21 @@ const TreasureMapping = () => {
   const [imageFile, setImageFile] = useState();
   const [isAnalysing, setIsAnalysing] = useState(false);
   const [treasurePosition, setTrasurePotision] = useState();
+  const [isCameraOn, setIsCameraOn] = useState(false);
 
   const imageFileinputRef = useRef();
   const handleClickImageSelect = () => {
     imageFileinputRef.current.click();
+  }
+
+  const cameraOn = () => {
+    setIsCameraOn(true);
+
+  }
+
+  const cameraOff = () => {
+    setIsCameraOn(false);
+
   }
 
   const handleChangeImageFileInput = (e) => {
@@ -47,7 +59,8 @@ const TreasureMapping = () => {
   return (
     <>
       <Container>
-        <Button onClick={handleClickImageSelect}>画像を選択</Button>
+        <Button onClick={handleClickImageSelect}>画像ファイルから</Button>
+        <Button onClick={cameraOn}>カメラから(スマホ向け)</Button>
         <input
           type="file"
           id="inputfile"
@@ -57,6 +70,8 @@ const TreasureMapping = () => {
           hidden
         />
       </Container>
+
+      {isCameraOn ? <Camera cameraOff={() => cameraOff()}/> : null}
 
       <Container>
         {imageFile ?
