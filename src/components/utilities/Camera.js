@@ -53,11 +53,6 @@ const Camera = (props) => {
     props.setImageFile(canvasRef.current.toDataURL("image/png"));
   }
 
-  const logWidthHeight = () => {
-    console.log('width: ' + videoRef.current.clientWidth);
-    console.log('height: ' + videoRef.current.clientHeight);
-  }
-
   return (
     <div className="camera">
       {streamError ? (
@@ -72,10 +67,9 @@ const Camera = (props) => {
             autoPlay
             ref={callbackVideoRef}
           />
-          <div className="capture-frame"></div>
+                    <div className="capture-frame"></div>
           <Button onClick={takepicture}>画像キャプチャ</Button>
           <Button onClick={cancel}>カメラ終了</Button>
-          <Button onClick={logWidthHeight}>縦横をログ</Button>
         </>
       ) : null}
       <canvas id="canvas" ref={canvasRef} hidden />
