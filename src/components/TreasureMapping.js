@@ -58,6 +58,8 @@ const TreasureMapping = () => {
 
   return (
     <>
+          {isCameraOn ? <Camera setImageFile={(imagefile) => setImageFile(imagefile)} cameraOff={() => cameraOff()}/> : null}
+
       <Container>
         <Button onClick={handleClickImageSelect}>画像ファイルから</Button>
         <Button onClick={cameraOn}>カメラから(スマホ向け)</Button>
@@ -70,8 +72,6 @@ const TreasureMapping = () => {
           hidden
         />
       </Container>
-
-      {isCameraOn ? <Camera setImageFile={(imagefile) => setImageFile(imagefile)} cameraOff={() => cameraOff()}/> : null}
 
       <Container>
         {imageFile ?

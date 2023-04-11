@@ -23,20 +23,31 @@
   height: auto;
 }
 
-.camera * {
-  position:absolute;
+.camera {
+  position: relative;
   z-index: 10000;
+  height: auto;
 }
 
 .camera video {
-  position: relative;
+  position: absolute;
   z-index: 9999;
+  width: 100%;
+  top: 0;
+  left: 0;
 }
 
 .capture-frame {
+  position: absolute;
   width: 300px;
   height: 300px;
+  top: 10px;
   border: solid 2px yellowgreen;
-  top: 0;
+  z-index: 9999;
+}
+
+.camera button {
+  position: relative;
+  z-index: 9999;
   left: 0;
 }
