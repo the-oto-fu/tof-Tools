@@ -1,5 +1,6 @@
-import { useState, useRef } from "react";
+import { useState, useRef, useEffect } from "react";
 import { Button, Container, Dimmer, Loader } from 'semantic-ui-react'
+import { motion } from 'framer-motion'
 import axios from 'axios';
 import Camera from './utilities/Camera';
 
@@ -11,6 +12,24 @@ const TreasureMapping = () => {
   const [treasurePosition, setTrasurePotision] = useState();
   const [isCameraOn, setIsCameraOn] = useState(false);
 
+  //引数のblob画像をデータURL形式にしてStateにセットする
+  const ReadImageAsURL = async (blobImage) => {
+    reader.readAsDataURL(blobImage);
+    reader.onload = () => {
+      setImageFile(reader.result);
+    };
+  }
+
+  useEffect(() => {
+    //画面に対するペーストのイベント
+    window.addEventListener("paste", function (e) {
+      var item = Array.from(e.clipboardData.items).find(x => /^image\//.test(x.type));
+      var blob = item.getAsFile();
+      setTrasurePotision(null);
+      ReadImageAsURL(blob);
+    });
+  }, []);
+
   const imageFileinputRef = useRef();
   const handleClickImageSelect = () => {
     imageFileinputRef.current.click();
@@ -18,7 +37,6 @@ const TreasureMapping = () => {
 
   const cameraOn = () => {
     setIsCameraOn(true);
-
   }
 
   const cameraOff = () => {
@@ -28,15 +46,7 @@ const TreasureMapping = () => {
 
   const handleChangeImageFileInput = (e) => {
     setTrasurePotision(null);
-    reader.readAsDataURL(e.target.files[0]);
-    reader.onload = () => {
-      setImageFile(reader.result);
-    };
-  }
-
-  const resizeImage = (imageData) => {
-    const canvas = document.createElement('canvas');
-    //canvas
+    ReadImageAsURL(e.target.files[0]);
   }
 
   const getBase64Image = () => {
@@ -47,18 +57,25 @@ const TreasureMapping = () => {
   const identifyTreasurePosition = () => {
     setIsAnalysing(true);
     setTrasurePotision();
-      axios.post('https://8i7ttdp7w5.execute-api.ap-northeast-1.amazonaws.com/stage/g15',
+    axios.post('https://8i7ttdp7w5.execute-api.ap-northeast-1.amazonaws.com/stage/g15',
       { mapImage: getBase64Image() }
     )
       .then((response) => {
         setTrasurePotision(response.data);
         setIsAnalysing(false);
+      })
+      .catch(function (error) {
+        console.log(error.response);
       });
   }
 
   return (
-    <>
-          {isCameraOn ? <Camera setImageFile={(imagefile) => setImageFile(imagefile)} cameraOff={() => cameraOff()}/> : null}
+    <motion.div
+      animate={{ opacity: 1 }}
+      initial={{ opacity: 0 }}
+      transition={{ duration: 0.2 }}
+    >
+      {isCameraOn ? <Camera setImageFile={(imagefile) => setImageFile(imagefile)} cameraOff={() => cameraOff()} /> : null}
 
       <Container>
         <Button onClick={handleClickImageSelect}>画像ファイルから</Button>
@@ -91,7 +108,7 @@ const TreasureMapping = () => {
           : null}
         {treasurePosition != null ? <>{treasurePosition.position}</> : null}
       </Container>
-    </>
+    </motion.div>
   )
 }
 

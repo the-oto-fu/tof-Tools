@@ -33,16 +33,22 @@
 
 .capture-frame {
   position: absolute;
-  width: 40vw;
-  height: 40vw;
+  width: 80vw;
+  height: 64vw;
   top: 0;
-  left: 50%;
-  transform: translate(-50%, 20%);
+  left: 10vw;
+  margin: 0 auto;
   border: solid 2px yellowgreen;
   z-index: 10000;
 }
 
 .camera button {
   position: relative;
+  top: 80vw;
   z-index: 10000;
+}
+
+#canvas {
+  position: absolute;
+  z-index: 100001;
 }
