@@ -62,7 +62,9 @@ const TreasureMapping = () => {
     let imageExtention, image64Content;
     [imageExtention, image64Content] = getBase64Image();
     axios.post('https://8i7ttdp7w5.execute-api.ap-northeast-1.amazonaws.com/stage/g15',
-      { mapImage: image64Content}
+      { mapImage: image64Content,
+        imageExtention: imageExtention
+      }
     )
       .then((response) => {
         setTrasurePotision(response.data);
