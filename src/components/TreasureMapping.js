@@ -71,7 +71,8 @@ const TreasureMapping = () => {
         setIsAnalysing(false);
       })
       .catch(function (error) {
-        console.log(error.response);
+        console.log(error);
+        setIsAnalysing(false);
       });
   }
 
