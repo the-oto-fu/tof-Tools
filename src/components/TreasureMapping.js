@@ -50,15 +50,19 @@ const TreasureMapping = () => {
   }
 
   const getBase64Image = () => {
-    const tmp64img = imageFile.split(/^data:\w+\/\w+;base64,/)[1];
-    return tmp64img;
+    //正規表現を()でくくるとキャプチャグループとなり、その部分が戻り値配列の[1]移行の要素として設定される
+    //matches[0]がマッチした文字列全体、[1]が一つ目のキャプチャグループ(拡張子)、[2]が2つめのキャプチャグループ(base64内容)
+    const matches = imageFile.match(/^data:\w+\/(\w+);base64,(.*)$/);
+    return [matches[1], matches[2]];
   }
 
   const identifyTreasurePosition = () => {
     setIsAnalysing(true);
     setTrasurePotision();
+    let imageExtention, image64Content;
+    [imageExtention, image64Content] = getBase64Image();
     axios.post('https://8i7ttdp7w5.execute-api.ap-northeast-1.amazonaws.com/stage/g15',
-      { mapImage: getBase64Image() }
+      { mapImage: image64Content}
     )
       .then((response) => {
         setTrasurePotision(response.data);
