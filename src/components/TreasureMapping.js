@@ -1,5 +1,5 @@
 import { useState, useRef, useEffect } from "react";
-import { Button, Container, Dimmer, Loader } from 'semantic-ui-react'
+import { Button, Container, Dimmer, Loader, Message } from 'semantic-ui-react'
 import { motion } from 'framer-motion'
 import axios from 'axios';
 import Camera from './utilities/Camera';
@@ -8,8 +8,9 @@ let reader = new FileReader();
 
 const TreasureMapping = () => {
   const [imageFile, setImageFile] = useState();
-  const [isAnalysing, setIsAnalysing] = useState(false);
   const [treasurePosition, setTrasurePotision] = useState();
+  const [screenError, setScreenError] = useState();
+  const [isAnalysing, setIsAnalysing] = useState(false);
   const [isCameraOn, setIsCameraOn] = useState(false);
 
   //引数のblob画像をデータURL形式にしてStateにセットする
@@ -62,7 +63,8 @@ const TreasureMapping = () => {
     let imageExtention, image64Content;
     [imageExtention, image64Content] = getBase64Image();
     axios.post('https://8i7ttdp7w5.execute-api.ap-northeast-1.amazonaws.com/stage/g15',
-      { mapImage: image64Content,
+      {
+        mapImage: image64Content,
         imageExtention: imageExtention
       }
     )
@@ -82,7 +84,19 @@ const TreasureMapping = () => {
       initial={{ opacity: 0 }}
       transition={{ duration: 0.2 }}
     >
-      {isCameraOn ? <Camera setImageFile={(imagefile) => setImageFile(imagefile)} cameraOff={() => cameraOff()} /> : null}
+      {screenError ? 
+        <Message negative>
+          <Message.Header>エラーが発生しました😱再度操作をお願いします😭</Message.Header>
+          <p>{screenError.message}</p>
+        </Message>
+      : null}
+
+      {isCameraOn ? 
+        <Camera setImageFile={(imagefile) => setImageFile(imagefile)} 
+          cameraOff={() => cameraOff()} 
+          setScreenError={(error) => setScreenError(error)}
+        />
+      : null}
 
       <Container>
         <Button onClick={handleClickImageSelect}>画像ファイルから</Button>
@@ -113,7 +127,9 @@ const TreasureMapping = () => {
         {isAnalysing
           ? <Dimmer active inverted><Loader>座標特定中…</Loader></Dimmer>
           : null}
-        {treasurePosition != null ? <>{treasurePosition.position}</> : null}
+        {treasurePosition != null ? 
+          <>{treasurePosition.position}</> 
+        : null}
       </Container>
     </motion.div>
   )

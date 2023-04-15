@@ -1,28 +1,26 @@
 import { useState, useRef, useCallback, useEffect } from 'react'
-import { Button, Message } from 'semantic-ui-react'
+import { Button } from 'semantic-ui-react'
 
 const Camera = (props) => {
 
   const [stream, setStream] = useState(null);
-  const [streamError, setStreamError] = useState(null);
 
   useEffect(() => {
     const getUserMedia = async () => {
-      try {
-        //メディアストリームの取得リクエスト
-        navigator.mediaDevices.getUserMedia({
-           audio: false, 
-           video: {
-            facingMode: "environment" 
-           } 
-          })
-          .then((tmpStream) => {
-            setStream(tmpStream);
-          }
-          )
-      } catch (e) {
-        setStreamError(e);
-      }
+      //メディアストリームの取得リクエスト
+      navigator.mediaDevices.getUserMedia({
+        audio: false,
+        video: {
+          facingMode: "environment"
+        }
+      })
+        .then((tmpStream) => {
+          setStream(tmpStream);
+        }
+        )
+        .catch((e) => {
+          props.setScreenError(e);
+        })
     };
 
     getUserMedia();
@@ -48,7 +46,7 @@ const Camera = (props) => {
       //以下のmuted, playsinlineがないとiOSのカメラが動かない。videoに直接属性を追加してもダメだった
       node.setAttribute('muted', '');
       node.setAttribute('playsinline', '');
-      
+
     }
     videoRef.current = node;
   }, [stream])
@@ -60,19 +58,13 @@ const Camera = (props) => {
     //drawImageは現在の要素の大きさではなく要素の元の大きさ（解像度）に対して行われる
     //解像度に対して開始点や幅を指定する必要がある
     let videoWidth = stream.getVideoTracks()[0].getSettings().width;
-    context.drawImage(videoRef.current, videoWidth*0.1, 0, videoWidth*0.8, videoWidth*0.64, 0, 0, 300, 240);
+    context.drawImage(videoRef.current, videoWidth * 0.1, 0, videoWidth * 0.8, videoWidth * 0.64, 0, 0, 300, 240);
     cancel();
     props.setImageFile(canvasRef.current.toDataURL("image/png"));
   }
 
   return (
     <div className="camera">
-      {streamError ? (
-        <Message negative>
-          <Message.Header>カメラの起動でエラーが発生しました</Message.Header>
-          <p>{streamError.message}</p>
-        </Message>
-      ) : null}
       {stream ? (
         <>
           <video
@@ -84,7 +76,7 @@ const Camera = (props) => {
           <Button onClick={cancel}>カメラ終了</Button>
         </>
       ) : null}
-      <canvas id="canvas" ref={canvasRef} hidden/>
+      <canvas id="canvas" ref={canvasRef} hidden />
     </div>
   );
 }
