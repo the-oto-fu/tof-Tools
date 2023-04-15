@@ -1,5 +1,5 @@
 import { useState, useRef, useCallback, useEffect } from 'react'
-import { Button } from 'semantic-ui-react'
+import { Icon } from 'semantic-ui-react'
 
 const Camera = (props) => {
 
@@ -54,7 +54,7 @@ const Camera = (props) => {
   const takepicture = () => {
     const context = canvasRef.current.getContext("2d");
     canvasRef.current.width = 300;
-    canvasRef.current.height = 300;
+    canvasRef.current.height = 240;
     //drawImageは現在の要素の大きさではなく要素の元の大きさ（解像度）に対して行われる
     //解像度に対して開始点や幅を指定する必要がある
     let videoWidth = stream.getVideoTracks()[0].getSettings().width;
@@ -65,18 +65,19 @@ const Camera = (props) => {
 
   return (
     <div className="camera">
-      {stream ? (
-        <>
-          <video
-            autoPlay
-            ref={callbackVideoRef}
-          />
-          <div className="capture-frame"></div>
-          <Button onClick={takepicture}>画像キャプチャ</Button>
-          <Button onClick={cancel}>カメラ終了</Button>
-        </>
-      ) : null}
-      <canvas id="canvas" ref={canvasRef} hidden />
+      <div className='background'/>
+        {stream ? (
+          <>
+            <video
+              autoPlay
+              ref={callbackVideoRef}
+            />
+            <div className="capture-frame"></div>
+            <Icon name="camera" size="huge" circular inverted color='green' className='shutter-button' onClick={takepicture} />
+            <Icon name="cancel" size="huge" circular inverted onClick={cancel} />
+          </>
+        ) : null}
+        <canvas id="canvas" ref={canvasRef} hidden />
     </div>
   );
 }

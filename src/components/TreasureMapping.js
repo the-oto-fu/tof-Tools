@@ -1,10 +1,21 @@
 import { useState, useRef, useEffect } from "react";
-import { Button, Container, Dimmer, Loader, Message } from 'semantic-ui-react'
+import { Button, Container, Dimmer, Loader, Message, Dropdown } from 'semantic-ui-react'
 import { motion } from 'framer-motion'
 import axios from 'axios';
 import Camera from './utilities/Camera';
 
 let reader = new FileReader();
+
+const mapNumberOptions = [
+  { key: '1', text: '1', value: '1' },
+  { key: '2', text: '2', value: '2' },
+  { key: '3', text: '3', value: '3' },
+  { key: '4', text: '4', value: '4' },
+  { key: '5', text: '5', value: '5' },
+  { key: '6', text: '6', value: '6' },
+  { key: '7', text: '7', value: '7' },
+  { key: '8', text: '8', value: '8' }
+]
 
 const TreasureMapping = () => {
   const [imageFile, setImageFile] = useState();
@@ -72,9 +83,9 @@ const TreasureMapping = () => {
         setTrasurePotision(response.data);
         setIsAnalysing(false);
       })
-      .catch(function (error) {
-        console.log(error);
+      .catch((error) => {
         setIsAnalysing(false);
+        setScreenError(error);
       });
   }
 
@@ -84,19 +95,19 @@ const TreasureMapping = () => {
       initial={{ opacity: 0 }}
       transition={{ duration: 0.2 }}
     >
-      {screenError ? 
+      {screenError ?
         <Message negative>
-          <Message.Header>エラーが発生しました😱再度操作をお願いします😭</Message.Header>
+          <Message.Header>エラーが発生しました。再操作をお願いします…🫨</Message.Header>
           <p>{screenError.message}</p>
         </Message>
-      : null}
+        : null}
 
-      {isCameraOn ? 
-        <Camera setImageFile={(imagefile) => setImageFile(imagefile)} 
-          cameraOff={() => cameraOff()} 
+      {isCameraOn ?
+        <Camera setImageFile={(imagefile) => setImageFile(imagefile)}
+          cameraOff={() => cameraOff()}
           setScreenError={(error) => setScreenError(error)}
         />
-      : null}
+        : null}
 
       <Container>
         <Button onClick={handleClickImageSelect}>画像ファイルから</Button>
@@ -111,7 +122,6 @@ const TreasureMapping = () => {
         />
       </Container>
 
-      <Container>
         {imageFile ?
           <>
             <img className="image-preview" src={imageFile} />
@@ -121,16 +131,26 @@ const TreasureMapping = () => {
           </>
           : null
         }
-      </Container>
 
-      <Container>
-        {isAnalysing
-          ? <Dimmer active inverted><Loader>座標特定中…</Loader></Dimmer>
-          : null}
-        {treasurePosition != null ? 
-          <>{treasurePosition.position}</> 
+      {isAnalysing
+        ? <Dimmer active inverted><Loader>座標特定中…</Loader></Dimmer>
         : null}
-      </Container>
+      {treasurePosition != null ?
+        <motion.div
+          initial={{ y: "100vh" }}
+          animate={{ y: 0 }}
+          transition={{ type: "spring", stiffness: 50, duration: 0.1 }}
+        >
+            {treasurePosition.position}
+            <Dropdown
+              placeholder='データ収集のため、特定にかけたの地図の番号を選択してくれると助かります🤗'
+              selection
+              options={mapNumberOptions}
+              className="map-number-dropdown"
+            />
+            <img className="map-overview" src="/treasuremapping/overview_g15.png" />
+        </motion.div>
+        : null}
     </motion.div>
   )
 }
