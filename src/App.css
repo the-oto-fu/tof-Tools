@@ -4,6 +4,7 @@
 
 .App-Header {
   position: sticky;
+  z-index: 500;
   top: 0;
 }
 
@@ -14,6 +15,7 @@
 .header-menu {
   position: absolute;
   z-index: 500;
+  transform: translate(0, -14px);
   right: 0.5vw;
 }
 
@@ -58,7 +60,7 @@
   z-index: 10000;
 }
 
-.camera .shutter-button {
+.camera .cancel-button {
   margin-right: 50px;
 }
 
@@ -74,6 +76,10 @@
   max-width: 600px;
   margin-left: auto;
   margin-right: auto;
+}
+
+.identify-result-container > .ui.dropdown:not(.button) > .default.text {
+  color: rgb(100, 100, 100);
 }
 
 .map-overview {
