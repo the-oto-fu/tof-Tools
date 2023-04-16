@@ -1,5 +1,5 @@
 import { useState, useRef, useEffect } from "react";
-import { Button, Container, Dimmer, Loader, Message, Dropdown } from 'semantic-ui-react'
+import { Button, Container, Dimmer, Loader, Message, Dropdown, Label } from 'semantic-ui-react'
 import { motion } from 'framer-motion'
 import axios from 'axios';
 import Camera from './utilities/Camera';
@@ -122,15 +122,15 @@ const TreasureMapping = () => {
         />
       </Container>
 
-        {imageFile ?
-          <>
-            <img className="image-preview" src={imageFile} />
-            <Container>
-              <Button onClick={identifyTreasurePosition}>座標を特定!</Button>
-            </Container>
-          </>
-          : null
-        }
+      {imageFile ?
+        <>
+          <img className="image-preview" src={imageFile} />
+          <Container>
+            <Button onClick={identifyTreasurePosition}>座標を特定!</Button>
+          </Container>
+        </>
+        : null
+      }
 
       {isAnalysing
         ? <Dimmer active inverted><Loader>座標特定中…</Loader></Dimmer>
@@ -138,17 +138,24 @@ const TreasureMapping = () => {
       {treasurePosition != null ?
         <motion.div
           initial={{ y: "100vh" }}
-          animate={{ y: 0 }}
-          transition={{ type: "spring", stiffness: 50, duration: 0.1 }}
+          animate={{ y: "0", 
+          transitionEnd: {
+            transform: "none"
+          }}}
+          transition={{ type: "spring", stiffness: 80 }}
         >
+          <Container>
+          <Label color="pink" size="big">
             {treasurePosition.position}
-            <Dropdown
-              placeholder='データ収集のため、特定にかけたの地図の番号を選択してくれると助かります🤗'
-              selection
-              options={mapNumberOptions}
-              className="map-number-dropdown"
-            />
-            <img className="map-overview" src="/treasuremapping/overview_g15.png" />
+          </Label>
+          <Dropdown
+            placeholder='データ収集のため、特定にかけたの地図の番号を選択してくれると助かります🤗'
+            selection
+            options={mapNumberOptions}
+            className="map-number-dropdown"
+          />
+          <img className="map-overview" src="/treasuremapping/overview_g15.png" />
+          </Container>
         </motion.div>
         : null}
     </motion.div>

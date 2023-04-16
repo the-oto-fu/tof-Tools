@@ -65,9 +65,9 @@ const Camera = (props) => {
 
   return (
     <div className="camera">
-      <div className='background'/>
         {stream ? (
           <>
+            <div className='background'/>
             <video
               autoPlay
               ref={callbackVideoRef}
