@@ -24,7 +24,7 @@ const Camera = (props) => {
     };
 
     getUserMedia();
-  }, []);
+  }, [props]);
 
   const cancel = () => {
     if (!stream) return;
@@ -73,8 +73,8 @@ const Camera = (props) => {
               ref={callbackVideoRef}
             />
             <div className="capture-frame"></div>
+            <Icon name="cancel" size="huge" circular inverted className='cancel-button' onClick={cancel} />
             <Icon name="camera" size="huge" circular inverted color='green' className='shutter-button' onClick={takepicture} />
-            <Icon name="cancel" size="huge" circular inverted onClick={cancel} />
           </>
         ) : null}
         <canvas id="canvas" ref={canvasRef} hidden />
