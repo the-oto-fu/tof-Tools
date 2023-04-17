@@ -187,7 +187,14 @@ const TreasureMapping = () => {
               G15画像を指定してください<br />
               キャプチャ画像をそのままCtrl + VしてもOK
             </Segment>
-            <Button onClick={cameraOn}>カメラから(スマホ向け)</Button>
+            <Button onClick={cameraOn}><Icon name='camera' />カメラから(スマホ向け)</Button>
+            <Message warning >
+              <Message.Header><Icon name='exclamation circle' />画像データ提供のお願い</Message.Header>
+              <p>現在画像データが足りず、特にスマホから撮影した画像は特定できない状態です😥<br/>
+                よろしければ画像特定→正解の番号を選択をしてデータの収集に協力お願いします！<br/>
+                スマホ撮影の画像がもっと集まれば特定できるようになるはず！！よろしくお願いします！
+              </p>
+            </Message>
           </motion.div>
         </Container>
       }
