@@ -102,3 +102,55 @@
   /* backgroundを移動させる */
   100% { background-position-x: 200%; }
 }
+
+.shapes {
+  position: relative;
+  height: 100vh;
+  width: 100vw;
+  background-color: turquoise;
+  overflow: hidden;
+}
+
+.shape {
+  /* will-change: transform; */
+  position: absolute;
+  border-radius: 50%;
+}
+
+.shape1 {
+  background-color: green;
+  width: 650px;
+  height: 650px;
+  margin: -325px 0 0 -325px;
+}
+.shape2 {
+  background-color: red;
+  width: 440px;
+  height: 440px;
+  margin: -220px 0 0 -220px;
+}
+.shape3 {
+  background-color: purple;
+  width: 270px;
+  height: 270px;
+  margin: -135px 0 0 -135px;
+}
+
+.content {
+  height: 100vh;
+  width: 100%;
+  position: absolute;
+  top: 0;
+  left: 0;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  background-color: white;
+  mix-blend-mode: screen;
+}
+
+.content h1 {
+  color: black;
+  margin: 0;
+  font-size: 10rem;
+}
