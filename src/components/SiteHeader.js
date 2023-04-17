@@ -61,7 +61,7 @@ function SiteHeader() {
           <Menu.Item
             onClick={handleClickSiteName}
           >
-            <h4>tof-Tools</h4>
+            <h4>tofTool</h4>
           </Menu.Item>
           <Menu.Menu position='right'>
             <Menu.Item onClick={handleToggleMenu}>

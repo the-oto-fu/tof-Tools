@@ -1,17 +1,6 @@
-import { useEffect } from 'react'
-import { Container, Header } from 'semantic-ui-react'
-import { gsap } from 'gsap'
 import { motion } from 'framer-motion'
 
 function Top() {
-    const shapeRef = useRef();
-    useEffect(() => {
-      gsap.to(div.current, {
-        backgroundImage: "linear-gradient(to left, #30CFD0, #330867)",
-        duration: 5
-      });
-    }, [div]);
-
     return (
         <motion.div
             animate={{ opacity: 1 }}
@@ -26,10 +15,10 @@ function Top() {
 
             <div class="content">
                 <h1>tofTool</h1>
+                <p>
+                    工事中で〜す
+                </p>
             </div>
-            <p>
-                サイトの説明を記載
-            </p>
         </motion.div>
     )
 }
