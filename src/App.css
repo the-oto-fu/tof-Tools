@@ -64,6 +64,10 @@
   margin-right: 50px;
 }
 
+.reset-button {
+  margin-bottom: 5px !important;
+}
+
 .treasure-position {
   height: auto;
   background-color: #C23175;
@@ -76,6 +80,9 @@
   max-width: 600px;
   margin-left: auto;
   margin-right: auto;
+  margin-top: 5px;
+  margin-bottom: 5px;
+  text-align: center !important;
 }
 
 .identify-result-container > .ui.dropdown:not(.button) > .default.text {
@@ -84,4 +91,14 @@
 
 .map-overview {
   max-width: 95vw;
+}
+
+.gaming {
+  /* 横長で虹色を作る */
+  background: linear-gradient(to right, Magenta, yellow, Cyan, Magenta) 0% center/200%;
+  animation: gaming 2s linear infinite;
+}
+@keyframes gaming {
+  /* backgroundを移動させる */
+  100% { background-position-x: 200%; }
 }

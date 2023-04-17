@@ -15,15 +15,17 @@ const mapNumberOptions = [
   { key: '5', text: '5', value: '5' },
   { key: '6', text: '6', value: '6' },
   { key: '7', text: '7', value: '7' },
-  { key: '8', text: '8', value: '8' }
+  { key: '8', text: '8', value: '8' },
 ]
 
 const TreasureMapping = () => {
   const [imageFile, setImageFile] = useState();
+  const [imageExtention, setImageExtention] = useState();
   const [treasurePosition, setTrasurePotision] = useState();
   const [screenError, setScreenError] = useState();
   const [isAnalysing, setIsAnalysing] = useState(false);
   const [isCameraOn, setIsCameraOn] = useState(false);
+  const [positionRegistered, setPositionRegistered] = useState(false);
 
   //引数のblob画像をデータURL形式にしてStateにセットする
   const ReadImageAsURL = async (imageFile) => {
@@ -70,10 +72,12 @@ const TreasureMapping = () => {
 
   const initTreasure = () => {
     setImageFile();
+    setImageExtention();
     setTrasurePotision();
     setScreenError();
     setIsAnalysing(false);
     setIsCameraOn(false);
+    setPositionRegistered(false);
   }
 
   const handleChangeImageFileInput = (e) => {
@@ -90,20 +94,40 @@ const TreasureMapping = () => {
   const identifyTreasurePosition = () => {
     setIsAnalysing(true);
     setTrasurePotision();
-    let imageExtention, image64Content;
-    [imageExtention, image64Content] = getBase64Image();
-    axios.post('https://8i7ttdp7w5.execute-api.ap-northeast-1.amazonaws.com/stage/g15',
+    let tmpImageExtention, image64Content;
+    [tmpImageExtention, image64Content] = getBase64Image();
+    setImageExtention(tmpImageExtention);
+    axios.post('https://bh64vjmz22.execute-api.ap-northeast-1.amazonaws.com/stage/g15',
       {
         mapImage: image64Content,
-        imageExtention: imageExtention
+        imageExtention: tmpImageExtention
       }
     )
       .then((response) => {
         setTrasurePotision(response.data);
         setIsAnalysing(false);
+        console.log(response.data);
       })
       .catch((error) => {
         setIsAnalysing(false);
+        setScreenError(error);
+      });
+  }
+
+  const registerPosition = (e, data) => {
+    console.log(imageExtention);
+    axios.post('https://bh64vjmz22.execute-api.ap-northeast-1.amazonaws.com/stage/registerposition',
+      {
+        filename: treasurePosition.requestId + '.' + imageExtention,
+        category: 'G15',
+        location: 'エルピス',
+        number: String(data.value)
+      }
+    )
+      .then(() => {
+        setPositionRegistered(true);
+      })
+      .catch((error) => {
         setScreenError(error);
       });
   }
@@ -133,11 +157,11 @@ const TreasureMapping = () => {
           <img className="image-preview" src={imageFile} />
           <Container>
             {
-              treasurePosition 
-              ? null 
-              : <Button onClick={identifyTreasurePosition}>座標を特定!</Button>
+              treasurePosition
+                ? null
+                : <Button onClick={identifyTreasurePosition}>座標を特定!</Button>
             }
-            <Button onClick={initTreasure}>画像を選び直す</Button>
+            <Button className="reset-button" onClick={initTreasure}>画像を選び直す</Button>
           </Container>
         </motion.div>
         :
@@ -186,12 +210,24 @@ const TreasureMapping = () => {
             <Label color="pink" size="big">
               【{treasurePosition.mapNumber}】{treasurePosition.position}
             </Label>
-            <Dropdown
-              placeholder='データ収集のため、正解の番号を選択していただけると助かります🤗'
-              selection
-              options={mapNumberOptions}
-              className="map-number-dropdown"
-            />
+            {
+              positionRegistered
+                ? <div className="gaming map-number-dropdown">Thank you!!</div>
+                :
+                <Dropdown
+                  placeholder="データ収集のため、正解の番号を選択していただけると助かります🤗"
+                  selection
+                  options={mapNumberOptions}
+                  className="map-number-dropdown"
+                  onChange={registerPosition}
+                  disabled={positionRegistered}
+                  clearable
+                  search
+                  //下記2つは何も選択しない際に1つ目のオプションが選択されるのを防止するため
+                  forceSelection={false}
+                  selectOnBlur={false}
+                />
+            }
             <img className="map-overview" src="/treasuremapping/overview_g15.png" />
           </Container>
         </motion.div>
