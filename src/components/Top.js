@@ -14,7 +14,7 @@ function Top() {
             </div>
 
             <div className="toppage-content">
-                <h1>tofTool</h1>
+                <div>tofTool</div>
                 <p>
                     工事中で〜す
                 </p>
