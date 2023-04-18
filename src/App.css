@@ -19,6 +19,12 @@
   right: 0.5vw;
 }
 
+.help {
+  color:olivedrab;
+  cursor: pointer;
+  display: inline-block;
+}
+
 .image-preview {
   width: 200px;
   height: auto;
@@ -140,7 +146,7 @@
   margin: -135px 0 0 -135px;
 }
 
-.content {
+.toppage-content {
   height: 100vh;
   width: 100%;
   position: absolute;
@@ -153,13 +159,28 @@
   mix-blend-mode: screen;
 }
 
-.content h1 {
+.toppage-content h1 {
   color: black;
   margin-top: 40vh;
   font-size: 10rem;
 }
 
-.content p {
+.toppage-content p {
   display: block;
   margin: 0;
+}
+
+.help-image {
+  float: left;
+  margin-bottom: 10px;
+}
+
+.image-description {
+  display: inline;
+  vertical-align: top;
+  margin-left: 5px;;
+}
+
+.ui.modal p {
+  clear: both;
 }

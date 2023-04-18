@@ -13,7 +13,7 @@ function Top() {
                 <div class="shape shape3"></div>
             </div>
 
-            <div class="content">
+            <div className="toppage-content">
                 <h1>tofTool</h1>
                 <p>
                     工事中で〜す

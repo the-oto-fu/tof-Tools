@@ -3,6 +3,7 @@ import { Button, Container, Dimmer, Loader, Message, Dropdown, Label, Icon, Segm
 import { motion } from 'framer-motion'
 import { useDropzone } from 'react-dropzone'
 import axios from 'axios';
+import Help from './TreasureMappingHelp';
 import Camera from './utilities/Camera';
 
 let reader = new FileReader();
@@ -134,6 +135,8 @@ const TreasureMapping = () => {
 
   return (
     <>
+      <Header as='h1'>宝の地図座標特定{'<G15>'}</Header>
+      <Help/>
       {screenError ?
         <Message negative>
           <Message.Header>エラーが発生しました。再操作をお願いします…😌</Message.Header>
@@ -156,12 +159,12 @@ const TreasureMapping = () => {
         >
           <img className="image-preview" src={imageFile} />
           <Container>
+            <Button className="reset-button" onClick={initTreasure}>画像を選び直す</Button>
             {
               treasurePosition
                 ? null
-                : <Button onClick={identifyTreasurePosition}>座標を特定!</Button>
+                : <Button color='green' onClick={identifyTreasurePosition}>座標を特定!</Button>
             }
-            <Button className="reset-button" onClick={initTreasure}>画像を選び直す</Button>
           </Container>
         </motion.div>
         :
@@ -190,9 +193,8 @@ const TreasureMapping = () => {
             <Button onClick={cameraOn}><Icon name='camera' />カメラから(スマホ向け)</Button>
             <Message warning >
               <Message.Header><Icon name='exclamation circle' />画像データ提供のお願い</Message.Header>
-              <p>現在画像データが足りず、特にスマホから撮影した画像は特定できない状態です😥<br/>
-                よろしければ画像特定→正解の番号を選択をしてデータの収集に協力お願いします！<br/>
-                スマホ撮影の画像がもっと集まれば特定できるようになるはず！！よろしくお願いします！
+              <p>現在画像データが足りず、特にスマホから撮影した画像は特定できない状態です。<br />
+                画像特定後、正解の番号を選択を是非お願いします🙏
               </p>
             </Message>
           </motion.div>
@@ -229,7 +231,6 @@ const TreasureMapping = () => {
                   onChange={registerPosition}
                   disabled={positionRegistered}
                   clearable
-                  search
                   //下記2つは何も選択しない際に1つ目のオプションが選択されるのを防止するため
                   forceSelection={false}
                   selectOnBlur={false}
