@@ -51,16 +51,14 @@ const Camera = (props) => {
     videoRef.current = node;
   }, [stream])
 
-  const takepicture = () => {
+  const takepicture = async () => {
     const context = canvasRef.current.getContext("2d");
-    canvasRef.current.width = 300;
-    canvasRef.current.height = 240;
     //drawImageは現在の要素の大きさではなく要素の元の大きさ（解像度）に対して行われる
     //解像度に対して開始点や幅を指定する必要がある
     let videoWidth = stream.getVideoTracks()[0].getSettings().width;
     context.drawImage(videoRef.current, videoWidth * 0.1, 0, videoWidth * 0.8, videoWidth * 0.64, 0, 0, 300, 240);
-    cancel();
     props.setImageFile(canvasRef.current.toDataURL("image/png"));
+    cancel();
   }
 
   return (
@@ -77,7 +75,7 @@ const Camera = (props) => {
             <Icon name="camera" size="huge" circular inverted color='green' className='shutter-button' onClick={takepicture} />
           </>
         ) : null}
-        <canvas id="canvas" ref={canvasRef} hidden />
+        <canvas width={300} height={240} ref={canvasRef} hidden />
     </div>
   );
 }
