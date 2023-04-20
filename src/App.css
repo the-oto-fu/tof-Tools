@@ -176,12 +176,13 @@
 .help-image {
   float: left;
   margin-bottom: 10px;
+  margin-right: 5px;;
+
 }
 
 .image-description {
   display: inline;
   vertical-align: top;
-  margin-left: 5px;;
 }
 
 .ui.modal p {

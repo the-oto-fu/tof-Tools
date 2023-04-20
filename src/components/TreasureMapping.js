@@ -194,7 +194,7 @@ const TreasureMapping = () => {
             <Message warning >
               <Message.Header><Icon name='exclamation circle' />画像データ提供のお願い</Message.Header>
               <p>現在画像データが足りず、特にスマホから撮影した画像は特定できない状態です。<br />
-                画像特定後、正解の番号を選択を是非お願いします🙏
+                画像特定後、正解の番号の選択を是非お願いします🙏
               </p>
             </Message>
           </motion.div>
