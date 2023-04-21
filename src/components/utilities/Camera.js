@@ -22,9 +22,8 @@ const Camera = (props) => {
           props.setScreenError(e);
         })
     };
-
     getUserMedia();
-  }, [props]);
+  }, []);
 
   const cancel = () => {
     if (!stream) return;

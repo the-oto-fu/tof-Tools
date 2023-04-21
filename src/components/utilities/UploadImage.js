@@ -20,12 +20,13 @@ function UploadImage(props) {
 
     useEffect(() => {
         //画面に対するペーストのイベント
-        window.addEventListener("paste", (e) => {
+        window.addEventListener("paste", function imagePaste(e) {
             let items = Array.from(e.clipboardData.items);
             let item = items.find(x => /^image\//.test(x.type));
             if (item) {
                 let image = item.getAsFile();
                 ReadImageAsURL(image);
+                window.removeEventListener("paste", imagePaste);
             }
         });
     }, []);
