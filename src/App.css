@@ -82,6 +82,10 @@
   margin-right: 50px;
 }
 
+.dropzone {
+  margin-bottom: 14px;;
+}
+
 .reset-button {
   margin-bottom: 5px !important;
 }

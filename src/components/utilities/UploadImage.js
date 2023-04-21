@@ -66,28 +66,31 @@ function UploadImage(props) {
                 : null
             }
 
-            <motion.div {...getRootProps({ className: 'dropzone' })}
+            <motion.div
                 animate={{ opacity: 1 }}
                 initial={{ opacity: 0 }}
                 transition={{ duration: 0.2 }}
             >
-                <input
-                    {...getInputProps()}
-                    type="file"
-                    id="inputfile"
-                    accept=".png,.jpg,.jpeg"
-                    ref={imageFileinputRef}
-                    onChange={(e) => handleChangeImageFileInput(e)}
-                />
-                <Segment placeholder onClick={handleClickImageSelect}>
-                    <Header icon>
-                        <Icon name='picture' />
-                        クリックまたはドラッグ&ドロップもしくはカメラから
-                    </Header>
-                    G15画像を指定してください<br />
-                    キャプチャ画像をそのままCtrl + VしてもOK
-                </Segment>
+                <div {...getRootProps({ className: 'dropzone' })}>
+                    <input
+                        {...getInputProps()}
+                        type="file"
+                        id="inputfile"
+                        accept=".png,.jpg,.jpeg"
+                        ref={imageFileinputRef}
+                        onChange={(e) => handleChangeImageFileInput(e)}
+                    />
+                    <Segment placeholder onClick={handleClickImageSelect}>
+                        <Header icon>
+                            <Icon name='picture' />
+                            クリックまたはドラッグ&ドロップもしくはカメラから
+                        </Header>
+                        G15画像を指定してください<br />
+                        キャプチャ画像をそのままCtrl + VしてもOK
+                    </Segment>
+                </div>
                 <Button onClick={cameraOn} ><Icon name='camera' />カメラから(スマホ向け)</Button>
+
             </motion.div>
 
         </>
