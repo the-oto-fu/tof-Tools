@@ -4,6 +4,7 @@ import SiteHeader from './components/SiteHeader';
 import Top from './components/Top'
 import Minikuji from './components/Minikuji';
 import TreasureMapping from './components/TreasureMapping';
+import OfferMapImage from './components/OfferMapImage';
 
 function App() {
   const location = useLocation();
@@ -15,12 +16,10 @@ function App() {
       </div>
       <div className='App-Body'>
         <Routes location={location} key={location.pathname}>
-          <Route path={'/'} element={<Top
-          />} />
-          <Route path={'/minikuji'} element={<Minikuji
-          />} />
-          <Route path={'/treasuremapping'} element={<TreasureMapping
-          />} />
+          <Route path={'/'} element={<Top/>} />
+          <Route path={'/minikuji'} element={<Minikuji/>} />
+          <Route path={'/treasuremapping'} element={<TreasureMapping/>} />
+          <Route path={'/treasuremapping/offer'} element={<OfferMapImage/>} />
         </Routes>
       </div>
     </div>

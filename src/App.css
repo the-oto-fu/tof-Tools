@@ -8,6 +8,10 @@
   top: 0;
 }
 
+.App-Body {
+  padding-bottom: 5px;
+}
+
 .App-Body * {
   display: block;
 	margin-left: auto;
@@ -87,7 +91,7 @@
 }
 
 .reset-button {
-  margin-bottom: 5px !important;
+  margin-bottom: 14px !important;
 }
 
 .treasure-position {
@@ -98,17 +102,20 @@
 }
 
 .map-number-dropdown {
-  display: block !important;
-  max-width: 600px;
-  margin-left: auto;
-  margin-right: auto;
-  margin-top: 5px;
-  margin-bottom: 5px;
-  text-align: center !important;
+  position: absolute !important;
+  top: 1px;
+  right: 1px;
+  font-weight: bold;
 }
 
-.identify-result-container > .ui.dropdown:not(.button) > .default.text {
-  color: rgb(100, 100, 100);
+.dropdown.map-number-dropdown > div.divider.default.text {
+  color: rgb(19, 19, 19);
+}
+
+.mapping-result {
+  margin-top: 14px;
+  position: relative;
+  width:fit-content;
 }
 
 .map-overview {
@@ -203,4 +210,8 @@
 
 .ui.modal p {
   clear: both;
+}
+
+.link-message {
+  margin-top: 14px;
 }

@@ -1,6 +1,7 @@
 import { useState, useEffect } from "react";
-import { Button, Container, Dimmer, Loader, Message, Dropdown, Label, Icon, Header } from 'semantic-ui-react'
+import { Button, Container, Dimmer, Loader, Message, Dropdown, Label, Icon, Header, Statistic } from 'semantic-ui-react'
 import { motion } from 'framer-motion'
+import { Link } from 'react-router-dom'
 import axios from 'axios';
 import Help from './TreasureMappingHelp';
 import UploadImage from "./utilities/UploadImage";
@@ -46,6 +47,7 @@ const TreasureMapping = () => {
     let tmpImageExtention, image64Content;
     [tmpImageExtention, image64Content] = getBase64Image();
     setImageExtention(tmpImageExtention);
+    /*
     axios.post('https://bh64vjmz22.execute-api.ap-northeast-1.amazonaws.com/stage/g15',
       {
         mapImage: image64Content,
@@ -55,16 +57,18 @@ const TreasureMapping = () => {
       .then((response) => {
         setTrasurePotision(response.data);
         setIsAnalysing(false);
-        console.log(response.data);
       })
       .catch((error) => {
         setIsAnalysing(false);
         setScreenError(error);
       });
+    */
+      setTrasurePotision({'mapNumber': '1', 'position': 'x:1, y:2'});
+      setIsAnalysing(false);
   }
 
   const registerPosition = (e, data) => {
-    console.log(imageExtention);
+    /*
     axios.post('https://bh64vjmz22.execute-api.ap-northeast-1.amazonaws.com/stage/registerposition',
       {
         filename: treasurePosition.requestId + '.' + imageExtention,
@@ -79,6 +83,8 @@ const TreasureMapping = () => {
       .catch((error) => {
         setScreenError(error);
       });
+    */
+    setPositionRegistered(true);
   }
 
   return (
@@ -100,7 +106,12 @@ const TreasureMapping = () => {
         >
           <img className="image-preview" src={imageFile} />
           <Button className="reset-button" onClick={() => setImageFile(null)}>画像を選び直す</Button>
-          <Button color='green' onClick={identifyTreasurePosition}>座標を特定!</Button>
+          {treasurePosition 
+            ? 
+              null            
+            :
+              <Button color='green' onClick={identifyTreasurePosition}>座標を特定!</Button>
+          }
         </motion.div>
         :
         <Container>
@@ -108,12 +119,14 @@ const TreasureMapping = () => {
             setImageFile={(imageFile) => setImageFile(imageFile)}
             setScreenError={(error) => setScreenError(error)}
           />
-          <Message warning >
-            <Message.Header><Icon name='exclamation circle' />画像データ提供のお願い</Message.Header>
-            <p>現在画像データが足りず、特にスマホから撮影した画像は特定できない状態です。<br />
-              画像特定後、正解の番号の選択を是非お願いします🙏
-            </p>
-          </Message>
+          <Link to="/treasuremapping/offer" className="link-message">
+            <Message warning>
+              <Message.Header><Icon name='exclamation circle' />画像データ提供のお願い</Message.Header>
+              <p>現在画像データが足りず、特にスマホから撮影した画像は特定できない状態です。<br />
+                こちらからスマホで撮影した画像の提供を是非お願いします🙏
+              </p>
+            </Message>
+          </Link>
         </Container>
       }
 
@@ -131,15 +144,18 @@ const TreasureMapping = () => {
           }}
           transition={{ type: "spring", stiffness: 80 }}
         >
+          <div>この地図の座標は…</div>
           <Label color="pink" size="big" tag>
             【{treasurePosition.mapNumber}】{treasurePosition.position}
           </Label>
+          <div className="mapping-result">
+          <img className="map-overview" src="/treasuremapping/overview_g15.png" />
           {
             positionRegistered
               ? <div className="gaming map-number-dropdown">Thank you!!</div>
               :
               <Dropdown
-                placeholder="データ収集のため、正解の番号を選択していただけると助かります🤗"
+                placeholder="データ収集のため、正解の番号を選択してね🤗"
                 selection
                 options={mapNumberOptions}
                 className="map-number-dropdown"
@@ -151,7 +167,7 @@ const TreasureMapping = () => {
                 selectOnBlur={false}
               />
           }
-          <img className="map-overview" src="/treasuremapping/overview_g15.png" />
+          </div>
         </motion.div>
         : null}
     </>

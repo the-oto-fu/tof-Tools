@@ -87,7 +87,7 @@ function UploadImage(props) {
                             クリックまたはドラッグ&ドロップもしくはカメラから
                         </Header>
                         G15画像を指定してください<br />
-                        キャプチャ画像をそのままCtrl + VしてもOK
+                        キャプチャ画像をそのままCtrl + VしてもOKです
                     </Segment>
                 </div>
                 <Button onClick={cameraOn} ><Icon name='camera' />カメラから(スマホ向け)</Button>
