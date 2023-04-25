@@ -18,17 +18,27 @@ function UploadImage(props) {
         }
     }, [acceptedFiles])
 
+    
+    const imagePaste = (e) => {
+        let items = Array.from(e.clipboardData.items);
+        let item = items.find(x => /^image\//.test(x.type));
+        if (item) {
+            let image = item.getAsFile();
+            ReadImageAsURL(image);
+            document.removeEventListener("paste", imagePaste);
+        }
+    }
+
     useEffect(() => {
         //画面に対するペーストのイベント
-        window.addEventListener("paste", function imagePaste(e) {
-            let items = Array.from(e.clipboardData.items);
-            let item = items.find(x => /^image\//.test(x.type));
-            if (item) {
-                let image = item.getAsFile();
-                ReadImageAsURL(image);
-                window.removeEventListener("paste", imagePaste);
-            }
-        });
+        document.addEventListener("paste", imagePaste);
+
+        //useEffect内で関数をreturnしたものはクリーンアップ関数になる 
+        //React はコンポーネントがアンマウントされるときにクリーンアップを実行する。
+        //ひとつ前のレンダーによる副作用を、次回の副作用を実行する前にもクリーンアップする。
+        return () => {
+            document.removeEventListener("paste", imagePaste);
+        }
     }, []);
 
     //引数のblob画像をデータURL形式にしてStateにセットする
@@ -51,6 +61,7 @@ function UploadImage(props) {
 
     const handleChangeImageFileInput = (e) => {
         ReadImageAsURL(e.target.files[0]);
+        document.removeEventListener("paste", imagePaste);
     }
 
     const handleClickImageSelect = () => {
@@ -72,7 +83,7 @@ function UploadImage(props) {
                 initial={{ opacity: 0 }}
                 transition={{ duration: 0.2 }}
             >
-                <div {...getRootProps({ className: 'dropzone' })}>
+                <div {...getRootProps({ className: 'dropzone' })} onClick={(e) => e.stopPropagation()}>
                     <input
                         {...getInputProps()}
                         type="file"

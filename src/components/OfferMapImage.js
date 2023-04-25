@@ -1,5 +1,5 @@
-import { useState } from "react";
-import { Button, Container, Message, Dropdown, Icon, Header } from 'semantic-ui-react'
+import { useState, useEffect } from "react";
+import { Button, Container, Dropdown, Header } from 'semantic-ui-react'
 import { motion } from 'framer-motion'
 import axios from 'axios';
 import UploadImage from "./utilities/UploadImage";
@@ -21,6 +21,41 @@ const OfferMapImage = () => {
     const [screenError, setScreenError] = useState();
     const [positionRegistered, setPositionRegistered] = useState(false);
 
+    //選択した画像の状態が変わる(nullを含む)と他の状態も初期化する
+    useEffect(() => {
+        setScreenError();
+        setPositionRegistered(false);
+    }, [imageFile])
+
+    const getBase64Image = () => {
+        //正規表現を()でくくるとキャプチャグループとなり、その部分が戻り値配列の[1]移行の要素として設定される
+        //matches[0]がマッチした文字列全体、[1]が一つ目のキャプチャグループ(拡張子)、[2]が2つめのキャプチャグループ(base64内容)
+        const matches = imageFile.match(/^data:\w+\/(\w+);base64,(.*)$/);
+        return [matches[1], matches[2]];
+    }
+
+    const registerMapImage = (e, data) => {
+        let tmpImageExtention, image64Content;
+        [tmpImageExtention, image64Content] = getBase64Image();
+
+        axios.post('https://bh64vjmz22.execute-api.ap-northeast-1.amazonaws.com/stage/offermapimage',
+            {
+                mapImage: image64Content,
+                imageExtention: tmpImageExtention,
+                category: 'G15',
+                location: 'エルピス',
+                number: String(data.value)
+            }
+        )
+            .then(() => {
+                setPositionRegistered(true);
+            })
+            .catch((error) => {
+                setScreenError(error);
+            });
+        setPositionRegistered(true);
+    }
+
     return (
         <>
             <Header as='h1'>画像提供ページ{'<G15>'}</Header>
@@ -33,18 +68,20 @@ const OfferMapImage = () => {
                     <>
                         <img className="image-preview" src={imageFile} />
                         <Button className="reset-button" onClick={() => setImageFile(null)}>画像を選び直す</Button>
-                        <Dropdown
-                            placeholder="提供する地図の番号を選択してください"
-                            selection
-                            options={mapNumberOptions}
-                            className="map-number-dropdown"
-                            //共通化したい                onChange={registerPosition}
-                            disabled={positionRegistered}
-                            clearable
-                            //下記2つは何も選択しない際に1つ目のオプションが選択されるのを防止するため
-                            forceSelection={false}
-                            selectOnBlur={false}
-                        />
+                        {positionRegistered ?
+                            <div className="gaming inlinethanks">Thank you!!</div>
+                            :
+                            <Dropdown
+                                placeholder="提供する地図の番号を選択してください"
+                                selection
+                                options={mapNumberOptions}
+                                onChange={registerMapImage}
+                                disabled={positionRegistered}
+                                clearable
+                                //下記は何も選択しない際に1つ目のオプションが選択されるのを防止するため
+                                selectOnBlur={false}
+                            />
+                        }
                     </>
                     :
                     <Container>
@@ -54,7 +91,9 @@ const OfferMapImage = () => {
                         />
                     </Container>
                 }
-                <img className="map-overview" src="/treasuremapping/overview_g15.png" />
+                <div className="overview-container">
+                    <img className="map-overview" src="/treasuremapping/overview_g15.png" />
+                </div>
             </motion.div>
         </>
     )

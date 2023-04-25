@@ -112,7 +112,7 @@
   color: rgb(19, 19, 19);
 }
 
-.mapping-result {
+.overview-container {
   margin-top: 14px;
   position: relative;
   width:fit-content;
@@ -130,6 +130,10 @@
 @keyframes gaming {
   /* backgroundを移動させる */
   100% { background-position-x: 200%; }
+}
+
+.inlinethanks {
+  display: inline;
 }
 
 .shapes {

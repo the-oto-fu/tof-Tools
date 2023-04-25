@@ -47,7 +47,7 @@ const TreasureMapping = () => {
     let tmpImageExtention, image64Content;
     [tmpImageExtention, image64Content] = getBase64Image();
     setImageExtention(tmpImageExtention);
-    /*
+
     axios.post('https://bh64vjmz22.execute-api.ap-northeast-1.amazonaws.com/stage/g15',
       {
         mapImage: image64Content,
@@ -62,13 +62,9 @@ const TreasureMapping = () => {
         setIsAnalysing(false);
         setScreenError(error);
       });
-    */
-      setTrasurePotision({'mapNumber': '1', 'position': 'x:1, y:2'});
-      setIsAnalysing(false);
   }
 
   const registerPosition = (e, data) => {
-    /*
     axios.post('https://bh64vjmz22.execute-api.ap-northeast-1.amazonaws.com/stage/registerposition',
       {
         filename: treasurePosition.requestId + '.' + imageExtention,
@@ -83,8 +79,6 @@ const TreasureMapping = () => {
       .catch((error) => {
         setScreenError(error);
       });
-    */
-    setPositionRegistered(true);
   }
 
   return (
@@ -148,22 +142,21 @@ const TreasureMapping = () => {
           <Label color="pink" size="big" tag>
             【{treasurePosition.mapNumber}】{treasurePosition.position}
           </Label>
-          <div className="mapping-result">
+          <div className="overview-container">
           <img className="map-overview" src="/treasuremapping/overview_g15.png" />
           {
             positionRegistered
               ? <div className="gaming map-number-dropdown">Thank you!!</div>
               :
               <Dropdown
-                placeholder="データ収集のため、正解の番号を選択してね🤗"
+                placeholder="データ収集のため、正解の番号を選択してください🤗"
                 selection
                 options={mapNumberOptions}
                 className="map-number-dropdown"
                 onChange={registerPosition}
                 disabled={positionRegistered}
                 clearable
-                //下記2つは何も選択しない際に1つ目のオプションが選択されるのを防止するため
-                forceSelection={false}
+                //下記は何も選択しない際に1つ目のオプションが選択されるのを防止するため
                 selectOnBlur={false}
               />
           }
