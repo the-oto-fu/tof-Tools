@@ -18,7 +18,7 @@ function UploadImage(props) {
         }
     }, [acceptedFiles])
 
-    
+
     const imagePaste = (e) => {
         let items = Array.from(e.clipboardData.items);
         let item = items.find(x => /^image\//.test(x.type));
@@ -49,7 +49,8 @@ function UploadImage(props) {
         };
     }
 
-    const cameraOn = () => {
+    const cameraOn = (event) => {
+        event.stopPropagation()
         setIsCameraOn(true);
     }
 
@@ -94,15 +95,15 @@ function UploadImage(props) {
                     />
                     <Segment placeholder onClick={handleClickImageSelect}>
                         <Header icon>
-                            <Icon name='picture' />
-                            クリックまたはドラッグ&ドロップもしくはカメラから
+                            <Icon name='cloud upload' />
+                            地図画像をアップロード
                         </Header>
-                        G15画像を指定してください<br />
-                        キャプチャ画像をそのままCtrl + VしてもOKです
+                        キャプチャ画像をそのままCtrl + VしてもOK!
+                        <div className="from-camera-button">
+                            <Button onClick={cameraOn} ><Icon name='camera' />カメラから(スマホ向け)</Button>
+                        </div>
                     </Segment>
                 </div>
-                <Button onClick={cameraOn} ><Icon name='camera' />カメラから(スマホ向け)</Button>
-
             </motion.div>
 
         </>

@@ -49,12 +49,11 @@ const OfferMapImage = () => {
             }
         )
             .then(() => {
-                setPositionRegistered(true);
                 setIsProcessing(false);
+                setPositionRegistered(true);
             })
             .catch((error) => {
-           });
-        setPositionRegistered(true);
+            });
     }
 
     return (
@@ -62,7 +61,7 @@ const OfferMapImage = () => {
             {isProcessing
                 ? <Dimmer active inverted><Loader>処理中…</Loader></Dimmer>
                 : null}
-            <Header as='h1'>画像提供ページ{'<G15>'}</Header>
+            <Header as='h1'>画像提供専用ページ{'<G15>'}</Header>
             <motion.div
                 animate={{ opacity: 1 }}
                 initial={{ opacity: 0 }}
@@ -72,20 +71,24 @@ const OfferMapImage = () => {
                     <>
                         <img className="image-preview" src={imageFile} />
                         <Button className="reset-button" onClick={() => setImageFile(null)}>画像を選び直す</Button>
-                        {positionRegistered ?
-                            <div className="gaming inlinethanks">Thank you!!</div>
-                            :
-                            <Dropdown
-                                placeholder="提供する地図の番号を選択してください"
-                                selection
-                                options={mapNumberOptions}
-                                onChange={registerMapImage}
-                                disabled={positionRegistered}
-                                clearable
-                                //下記は何も選択しない際に1つ目のオプションが選択されるのを防止するため
-                                selectOnBlur={false}
-                            />
-                        }
+                        <div className="overview-container">
+                            {positionRegistered ?
+                                <div className="gaming thanks">Thank you!!</div>
+                                :
+                                <Dropdown
+                                    placeholder="提供する地図の番号を選択してください"
+                                    className="map-number-dropdown"
+                                    selection
+                                    options={mapNumberOptions}
+                                    onChange={registerMapImage}
+                                    disabled={positionRegistered}
+                                    clearable
+                                    //下記は何も選択しない際に1つ目のオプションが選択されるのを防止するため
+                                    selectOnBlur={false}
+                                />
+                            }
+                            <img className="map-overview" src="/treasuremapping/overview_g15.png" />
+                        </div>
                     </>
                     :
                     <Container>
@@ -94,9 +97,6 @@ const OfferMapImage = () => {
                         />
                     </Container>
                 }
-                <div className="overview-container">
-                    <img className="map-overview" src="/treasuremapping/overview_g15.png" />
-                </div>
             </motion.div>
         </>
     )

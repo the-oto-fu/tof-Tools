@@ -102,11 +102,11 @@ const TreasureMapping = () => {
         >
           <img className="image-preview" src={imageFile} />
           <Button className="reset-button" onClick={() => setImageFile(null)}>画像を選び直す</Button>
-          {treasurePosition 
-            ? 
-              null            
+          {treasurePosition
+            ?
+            null
             :
-              <Button color='green' onClick={identifyTreasurePosition}>座標を特定!</Button>
+            <Button color='green' onClick={identifyTreasurePosition}>座標を特定!</Button>
           }
         </motion.div>
         :
@@ -145,23 +145,23 @@ const TreasureMapping = () => {
             【{treasurePosition.mapNumber}】{treasurePosition.position}
           </Label>
           <div className="overview-container">
-          <img className="map-overview" src="/treasuremapping/overview_g15.png" />
-          {
-            positionRegistered
-              ? <div className="gaming map-number-dropdown">Thank you!!</div>
-              :
-              <Dropdown
-                placeholder="データ収集のため、正解の番号を選択してください🤗"
-                selection
-                options={mapNumberOptions}
-                className="map-number-dropdown"
-                onChange={registerPosition}
-                disabled={positionRegistered}
-                clearable
-                //下記は何も選択しない際に1つ目のオプションが選択されるのを防止するため
-                selectOnBlur={false}
-              />
-          }
+            {
+              positionRegistered
+                ? <div className="gaming map-number-dropdown">Thank you!!</div>
+                :
+                <Dropdown
+                  placeholder="データ収集のため、正解の番号を選択してください🤗"
+                  selection
+                  options={mapNumberOptions}
+                  className="map-number-dropdown"
+                  onChange={registerPosition}
+                  disabled={positionRegistered}
+                  clearable
+                  //下記は何も選択しない際に1つ目のオプションが選択されるのを防止するため
+                  selectOnBlur={false}
+                />
+            }
+            <img className="map-overview" src="/treasuremapping/overview_g15.png" />
           </div>
         </motion.div>
         : null}
