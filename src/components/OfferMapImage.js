@@ -1,5 +1,5 @@
 import { useState, useEffect } from "react";
-import { Button, Container, Dropdown, Header } from 'semantic-ui-react'
+import { Button, Container, Dropdown, Header, Dimmer, Loader } from 'semantic-ui-react'
 import { motion } from 'framer-motion'
 import axios from 'axios';
 import UploadImage from "./utilities/UploadImage";
@@ -18,12 +18,11 @@ const mapNumberOptions = [
 const OfferMapImage = () => {
 
     const [imageFile, setImageFile] = useState();
-    const [screenError, setScreenError] = useState();
     const [positionRegistered, setPositionRegistered] = useState(false);
+    const [isProcessing, setIsProcessing] = useState(false);
 
     //選択した画像の状態が変わる(nullを含む)と他の状態も初期化する
     useEffect(() => {
-        setScreenError();
         setPositionRegistered(false);
     }, [imageFile])
 
@@ -35,6 +34,8 @@ const OfferMapImage = () => {
     }
 
     const registerMapImage = (e, data) => {
+        setIsProcessing(true);
+
         let tmpImageExtention, image64Content;
         [tmpImageExtention, image64Content] = getBase64Image();
 
@@ -49,15 +50,18 @@ const OfferMapImage = () => {
         )
             .then(() => {
                 setPositionRegistered(true);
+                setIsProcessing(false);
             })
             .catch((error) => {
-                setScreenError(error);
-            });
+           });
         setPositionRegistered(true);
     }
 
     return (
         <>
+            {isProcessing
+                ? <Dimmer active inverted><Loader>処理中…</Loader></Dimmer>
+                : null}
             <Header as='h1'>画像提供ページ{'<G15>'}</Header>
             <motion.div
                 animate={{ opacity: 1 }}
@@ -87,7 +91,6 @@ const OfferMapImage = () => {
                     <Container>
                         <UploadImage
                             setImageFile={(imageFile) => setImageFile(imageFile)}
-                            setScreenError={(error) => setScreenError(error)}
                         />
                     </Container>
                 }

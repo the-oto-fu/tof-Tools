@@ -1,5 +1,5 @@
 import { useState, useEffect } from "react";
-import { Button, Container, Dimmer, Loader, Message, Dropdown, Label, Icon, Header, Statistic } from 'semantic-ui-react'
+import { Button, Container, Dimmer, Loader, Message, Dropdown, Label, Icon, Header } from 'semantic-ui-react'
 import { motion } from 'framer-motion'
 import { Link } from 'react-router-dom'
 import axios from 'axios';
@@ -22,7 +22,7 @@ const TreasureMapping = () => {
   const [imageExtention, setImageExtention] = useState();
   const [treasurePosition, setTrasurePotision] = useState();
   const [screenError, setScreenError] = useState();
-  const [isAnalysing, setIsAnalysing] = useState(false);
+  const [isProcessing, setIsProcessing] = useState(false);
   const [positionRegistered, setPositionRegistered] = useState(false);
 
   //選択した画像の状態が変わる(nullを含む)と他の状態も初期化する
@@ -30,7 +30,7 @@ const TreasureMapping = () => {
     setImageExtention();
     setTrasurePotision();
     setScreenError();
-    setIsAnalysing(false);
+    setIsProcessing(false);
     setPositionRegistered(false);
   }, [imageFile])
 
@@ -42,7 +42,7 @@ const TreasureMapping = () => {
   }
 
   const identifyTreasurePosition = () => {
-    setIsAnalysing(true);
+    setIsProcessing(true);
     setTrasurePotision();
     let tmpImageExtention, image64Content;
     [tmpImageExtention, image64Content] = getBase64Image();
@@ -56,15 +56,16 @@ const TreasureMapping = () => {
     )
       .then((response) => {
         setTrasurePotision(response.data);
-        setIsAnalysing(false);
+        setIsProcessing(false);
       })
       .catch((error) => {
-        setIsAnalysing(false);
+        setIsProcessing(false);
         setScreenError(error);
       });
   }
 
   const registerPosition = (e, data) => {
+    setIsProcessing(true);
     axios.post('https://bh64vjmz22.execute-api.ap-northeast-1.amazonaws.com/stage/registerposition',
       {
         filename: treasurePosition.requestId + '.' + imageExtention,
@@ -75,6 +76,7 @@ const TreasureMapping = () => {
     )
       .then(() => {
         setPositionRegistered(true);
+        setIsProcessing(false);
       })
       .catch((error) => {
         setScreenError(error);
@@ -124,8 +126,8 @@ const TreasureMapping = () => {
         </Container>
       }
 
-      {isAnalysing
-        ? <Dimmer active inverted><Loader>座標特定中…</Loader></Dimmer>
+      {isProcessing
+        ? <Dimmer active inverted><Loader>処理中…</Loader></Dimmer>
         : null}
       {treasurePosition != null ?
         <motion.div
