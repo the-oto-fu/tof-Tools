@@ -1,5 +1,5 @@
 import { useState, useRef, useCallback, useEffect } from 'react'
-import { Icon } from 'semantic-ui-react'
+import { Icon, Dimmer } from 'semantic-ui-react'
 
 const Camera = (props) => {
 
@@ -61,21 +61,24 @@ const Camera = (props) => {
   }
 
   return (
-    <div className="camera">
+    <Dimmer active page>
+      <div className='camera'>
         {stream ? (
           <>
-            <div className='background'/>
             <video
               autoPlay
               ref={callbackVideoRef}
             />
+            <div className='control-ui'>
             <div className="capture-frame"></div>
             <Icon name="cancel" size="huge" circular inverted className='cancel-button' onClick={cancel} />
             <Icon name="camera" size="huge" circular inverted color='green' className='shutter-button' onClick={takepicture} />
+            </div>
           </>
         ) : null}
         <canvas width={300} height={240} ref={canvasRef} hidden />
-    </div>
+        </div>
+    </Dimmer>
   );
 }
 

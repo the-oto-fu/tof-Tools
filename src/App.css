@@ -42,44 +42,39 @@
   margin-bottom: 14px;
 }
 
-.camera {
-  height: 0;
-}
-
-.camera .background {
+.camera > video {
   position: absolute;
-  z-index: 9998;
+  z-index: 499;
   width: 100vw;
-  height: 100%;
-  background-color: black;
-  opacity: 0.85;
+  height: auto;
   top: 0;
   left: 0;
 }
 
-.camera video {
-  position: absolute;
-  z-index: 9999;
+.camera > .control-ui {
+  position: fixed;
+  display: block;
+  z-index: 500;
   width: 100vw;
+  height: auto;
   top: 0;
   left: 0;
 }
 
 .capture-frame {
-  position: absolute;
+  display: block;
   width: 80vw;
   height: 64vw;
   top: 0;
   left: 10vw;
   margin: 0 auto;
   border: solid 2px yellowgreen;
-  z-index: 10000;
+  z-index: 499;
 }
 
-.camera .icon {
+.control-ui > .icon {
   position: relative;
-  top: 64vw;
-  z-index: 10000;
+  z-index: 500;
 }
 
 .camera .cancel-button {
