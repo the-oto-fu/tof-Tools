@@ -69,26 +69,37 @@ const OfferMapImage = () => {
             >
                 {imageFile ?
                     <>
-                        <img className="image-preview" src={imageFile} />
+                        <img className="image-preview" src={imageFile} alt="アップロードした画像のプレビュー" />
                         <Button className="reset-button" onClick={() => setImageFile(null)}>画像を選び直す</Button>
-                        <div className="overview-container">
-                            {positionRegistered ?
-                                <div className="gaming thanks">Thank you!!</div>
-                                :
-                                <Dropdown
-                                    placeholder="提供する地図の番号を選択してください"
-                                    className="map-number-dropdown"
-                                    selection
-                                    options={mapNumberOptions}
-                                    onChange={registerMapImage}
-                                    disabled={positionRegistered}
-                                    clearable
-                                    //下記は何も選択しない際に1つ目のオプションが選択されるのを防止するため
-                                    selectOnBlur={false}
-                                />
-                            }
-                            <img className="map-overview" src="/treasuremapping/overview_g15.png" />
-                        </div>
+
+                        <motion.div
+                            initial={{ y: "100vh" }}
+                            animate={{
+                                y: "0",
+                                transitionEnd: {
+                                    transform: "none"
+                                }
+                            }}
+                            transition={{ type: "spring", stiffness: 80 }}
+                        >                        <div className="overview-container">
+                                {positionRegistered ?
+                                    <div className="gaming thanks">Thank you!!</div>
+                                    :
+                                    <Dropdown
+                                        placeholder="提供する地図の番号を選択してください"
+                                        className="map-number-dropdown"
+                                        selection
+                                        options={mapNumberOptions}
+                                        onChange={registerMapImage}
+                                        disabled={positionRegistered}
+                                        clearable
+                                        //下記は何も選択しない際に1つ目のオプションが選択されるのを防止するため
+                                        selectOnBlur={false}
+                                    />
+                                }
+                                <img className="map-overview" src="/treasuremapping/overview_g15.png" alt="全体の地図" />
+                            </div>
+                        </motion.div>
                     </>
                     :
                     <Container>

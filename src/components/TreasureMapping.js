@@ -100,7 +100,7 @@ const TreasureMapping = () => {
           initial={{ opacity: 0 }}
           transition={{ duration: 0.2 }}
         >
-          <img className="image-preview" src={imageFile} />
+          <img className="image-preview" src={imageFile} alt="アップロードした画像のプレビュー"/>
           <Button className="reset-button" onClick={() => setImageFile(null)}>画像を選び直す</Button>
           {treasurePosition
             ?
@@ -116,10 +116,10 @@ const TreasureMapping = () => {
             setScreenError={(error) => setScreenError(error)}
           />
           <Link to="/treasuremapping/offer" className="link-message">
-            <Message warning>
-              <Message.Header><Icon name='exclamation circle' />画像データ提供のお願い</Message.Header>
-              <p>現在画像データが足りず、特にスマホから撮影した画像は特定できない状態です。<br />
-                こちらからスマホで撮影した画像の提供を是非お願いします🙏
+            <Message warning compact>
+              <Message.Header><Icon name='exclamation circle' />画像データ提供のお願い🙏</Message.Header>
+              <p>画像データ不足により、スマホから撮影した画像は特定できない状態です<br/>
+                こちらからスマホで撮影した画像の提供を是非お願いします<Icon name='angle double right'/>
               </p>
             </Message>
           </Link>
@@ -161,7 +161,7 @@ const TreasureMapping = () => {
                   selectOnBlur={false}
                 />
             }
-            <img className="map-overview" src="/treasuremapping/overview_g15.png" />
+            <img className="map-overview" src="/treasuremapping/overview_g15.png" alt="全体の地図"/>
           </div>
         </motion.div>
         : null}
