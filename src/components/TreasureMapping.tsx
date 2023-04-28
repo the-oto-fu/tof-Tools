@@ -1,5 +1,5 @@
 import { useState, useEffect } from "react";
-import { Button, Container, Dimmer, Loader, Message, Dropdown, Label, Icon, Header } from 'semantic-ui-react'
+import { Button, Container, Dimmer, Loader, Message, Dropdown, DropdownProps, Label, Icon, Header } from 'semantic-ui-react'
 import { motion } from 'framer-motion'
 import { Link } from 'react-router-dom'
 import axios from 'axios';
@@ -16,36 +16,51 @@ const mapNumberOptions = [
   { key: '7', text: '7', value: '7' },
   { key: '8', text: '8', value: '8' },
 ]
+type ScreenError = {
+  category: string,
+  errorMessage: string
+};
+
+type TreasuremappingResponse = {
+  mapNumber: string,
+  position: string,
+  requestId: string
+};
 
 const TreasureMapping = () => {
-  const [imageFile, setImageFile] = useState();
-  const [imageExtention, setImageExtention] = useState();
-  const [treasurePosition, setTrasurePotision] = useState();
-  const [screenError, setScreenError] = useState();
+  const [imageFile, setImageFile] = useState('');
+  const [imageExtention, setImageExtention] = useState('');
+  const [treasurePosition, setTrasurePotision] = useState<TreasuremappingResponse | null>(null);
+  const [screenError, setScreenError] = useState<ScreenError | null>(null);
   const [isProcessing, setIsProcessing] = useState(false);
   const [positionRegistered, setPositionRegistered] = useState(false);
 
   //選択した画像の状態が変わる(nullを含む)と他の状態も初期化する
   useEffect(() => {
-    setImageExtention();
-    setTrasurePotision();
-    setScreenError();
+    setImageExtention('');
+    setTrasurePotision(null);
+    setScreenError(null);
     setIsProcessing(false);
     setPositionRegistered(false);
   }, [imageFile])
 
   const getBase64Image = () => {
-    //正規表現を()でくくるとキャプチャグループとなり、その部分が戻り値配列の[1]移行の要素として設定される
-    //matches[0]がマッチした文字列全体、[1]が一つ目のキャプチャグループ(拡張子)、[2]が2つめのキャプチャグループ(base64内容)
-    const matches = imageFile.match(/^data:\w+\/(\w+);base64,(.*)$/);
-    return [matches[1], matches[2]];
+    if (imageFile) {
+      //正規表現を()でくくるとキャプチャグループとなり、その部分が戻り値配列の[1]移行の要素として設定される
+      //matches[0]がマッチした文字列全体、[1]が一つ目のキャプチャグループ(拡張子)、[2]が2つめのキャプチャグループ(base64内容)
+      const matches = imageFile.match(/^data:\w+\/(\w+);base64,(.*)$/);
+      if (matches && matches.length >= 2) {
+        return [matches[1], matches[2]];
+      }
+    }
+    //TODO: error throw
+    return ['', ''];
   }
 
   const identifyTreasurePosition = () => {
     setIsProcessing(true);
-    setTrasurePotision();
-    let tmpImageExtention, image64Content;
-    [tmpImageExtention, image64Content] = getBase64Image();
+    setTrasurePotision(null);
+    const [tmpImageExtention, image64Content] = getBase64Image();
     setImageExtention(tmpImageExtention);
 
     axios.post('https://bh64vjmz22.execute-api.ap-northeast-1.amazonaws.com/stage/g15',
@@ -64,23 +79,28 @@ const TreasureMapping = () => {
       });
   }
 
-  const registerPosition = (e, data) => {
-    setIsProcessing(true);
-    axios.post('https://bh64vjmz22.execute-api.ap-northeast-1.amazonaws.com/stage/registerposition',
-      {
-        filename: treasurePosition.requestId + '.' + imageExtention,
-        category: 'G15',
-        location: 'エルピス',
-        number: String(data.value)
-      }
-    )
-      .then(() => {
-        setPositionRegistered(true);
-        setIsProcessing(false);
-      })
-      .catch((error) => {
-        setScreenError(error);
-      });
+  const registerPosition = (e: React.SyntheticEvent<HTMLElement>, data: DropdownProps) => {
+    if (treasurePosition) {
+      setIsProcessing(true);
+      axios.post('https://bh64vjmz22.execute-api.ap-northeast-1.amazonaws.com/stage/registerposition',
+        {
+          filename: treasurePosition.requestId + '.' + imageExtention,
+          category: 'G15',
+          location: 'エルピス',
+          number: (data.value as string)
+        }
+      )
+        .then(() => {
+          setPositionRegistered(true);
+          setIsProcessing(false);
+        })
+        .catch((error) => {
+          setScreenError(error);
+        });
+    } else {
+      //TODO: throw error
+      return
+    }
   }
 
   return (
@@ -90,7 +110,7 @@ const TreasureMapping = () => {
       {screenError ?
         <Message negative>
           <Message.Header>エラーが発生しました。再操作をお願いします…😌</Message.Header>
-          <p>{screenError.message}</p>
+          <p>{screenError.errorMessage}</p>
         </Message>
         : null}
 
@@ -101,7 +121,7 @@ const TreasureMapping = () => {
           transition={{ duration: 0.2 }}
         >
           <img className="image-preview" src={imageFile} alt="アップロードした画像のプレビュー" />
-          <Button className="reset-button" onClick={() => setImageFile(null)}>画像を選び直す</Button>
+          <Button className="reset-button" onClick={() => setImageFile('')}>画像を選び直す</Button>
           {treasurePosition
             ?
             null
@@ -112,8 +132,8 @@ const TreasureMapping = () => {
         :
         <Container>
           <UploadImage
-            setImageFile={(imageFile) => setImageFile(imageFile)}
-            setScreenError={(error) => setScreenError(error)}
+            setImageFile={(imageFile: string) => setImageFile(imageFile)}
+            setScreenError={(error: ScreenError) => setScreenError(error)}
           />
           <Link to="/treasuremapping/offer" className="link-message">
             <Button color="teal" size="big">
