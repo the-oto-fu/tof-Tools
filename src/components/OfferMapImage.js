@@ -1,5 +1,5 @@
 import { useState, useEffect } from "react";
-import { Button, Container, Dropdown, Header, Dimmer, Loader } from 'semantic-ui-react'
+import { Button, Container, Dropdown, Header, Dimmer, Loader, Message, Icon } from 'semantic-ui-react'
 import { motion } from 'framer-motion'
 import axios from 'axios';
 import UploadImage from "./utilities/UploadImage";
@@ -102,11 +102,20 @@ const OfferMapImage = () => {
                         </motion.div>
                     </>
                     :
+                    <>
                     <Container>
                         <UploadImage
                             setImageFile={(imageFile) => setImageFile(imageFile)}
                         />
                     </Container>
+                    
+                    <Message warning compact>
+                    <Message.Header><Icon name='exclamation circle' />スマホから撮影した画像が不足しています</Message.Header>
+                    <p>
+                      このページから画像の提供を是非お願いします🙏
+                    </p>
+                  </Message>
+                  </>
                 }
             </motion.div>
         </>
