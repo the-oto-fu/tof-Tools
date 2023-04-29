@@ -3,35 +3,15 @@ import { Button, Container, Dimmer, Loader, Message, Dropdown, DropdownProps, La
 import { motion } from 'framer-motion'
 import { Link } from 'react-router-dom'
 import axios from 'axios';
+import { Constants } from '../config/constants'
 import Help from './TreasureMappingHelp';
 import UploadImage from "./utilities/UploadImage";
-
-const mapNumberOptions = [
-  { key: '1', text: '1', value: '1' },
-  { key: '2', text: '2', value: '2' },
-  { key: '3', text: '3', value: '3' },
-  { key: '4', text: '4', value: '4' },
-  { key: '5', text: '5', value: '5' },
-  { key: '6', text: '6', value: '6' },
-  { key: '7', text: '7', value: '7' },
-  { key: '8', text: '8', value: '8' },
-]
-type ScreenError = {
-  category: string,
-  errorMessage: string
-};
-
-type TreasuremappingResponse = {
-  mapNumber: string,
-  position: string,
-  requestId: string
-};
 
 const TreasureMapping = () => {
   const [imageFile, setImageFile] = useState('');
   const [imageExtention, setImageExtention] = useState('');
-  const [treasurePosition, setTrasurePotision] = useState<TreasuremappingResponse | null>(null);
-  const [screenError, setScreenError] = useState<ScreenError | null>(null);
+  const [treasurePosition, setTrasurePotision] = useState<Constants.ObjectType.TreasuremappingResponse | null>(null);
+  const [screenError, setScreenError] = useState<Constants.ObjectType.ScreenError | null>(null);
   const [isProcessing, setIsProcessing] = useState(false);
   const [positionRegistered, setPositionRegistered] = useState(false);
 
@@ -63,7 +43,7 @@ const TreasureMapping = () => {
     const [tmpImageExtention, image64Content] = getBase64Image();
     setImageExtention(tmpImageExtention);
 
-    axios.post('https://bh64vjmz22.execute-api.ap-northeast-1.amazonaws.com/stage/g15',
+    axios.post(Constants.ApiEndpoint.FF14.G15,
       {
         mapImage: image64Content,
         imageExtention: tmpImageExtention
@@ -82,7 +62,7 @@ const TreasureMapping = () => {
   const registerPosition = (e: React.SyntheticEvent<HTMLElement>, data: DropdownProps) => {
     if (treasurePosition) {
       setIsProcessing(true);
-      axios.post('https://bh64vjmz22.execute-api.ap-northeast-1.amazonaws.com/stage/registerposition',
+      axios.post(Constants.ApiEndpoint.FF14.REGISTERPOSITION,
         {
           filename: treasurePosition.requestId + '.' + imageExtention,
           category: 'G15',
@@ -133,9 +113,9 @@ const TreasureMapping = () => {
         <Container>
           <UploadImage
             setImageFile={(imageFile: string) => setImageFile(imageFile)}
-            setScreenError={(error: ScreenError) => setScreenError(error)}
+            setScreenError={(error: Constants.ObjectType.ScreenError) => setScreenError(error)}
           />
-          <Link to="/treasuremapping/offer" className="link-message">
+          <Link to={Constants.ScreenPath.OFFER_IMAGE} className="link-message">
             <Button color="teal" size="big">
               画像提供はこちら<Icon name='angle double right' />
             </Button>
@@ -169,7 +149,7 @@ const TreasureMapping = () => {
                 <Dropdown
                   placeholder="データ収集のため、正解の番号を選択してください🤗"
                   selection
-                  options={mapNumberOptions}
+                  options={Constants.DropDownOption.mapNumberOptions}
                   className="map-number-dropdown"
                   onChange={registerPosition}
                   disabled={positionRegistered}

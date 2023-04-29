@@ -7,10 +7,10 @@ function Top() {
             initial={{ opacity: 0 }}
             transition={{ duration: 0.2 }}
         >
-            <div class="shapes">
-                <div class="shape shape1"></div>
-                <div class="shape shape2"></div>
-                <div class="shape shape3"></div>
+            <div className="shapes">
+                <div className="shape shape1"></div>
+                <div className="shape shape2"></div>
+                <div className="shape shape3"></div>
             </div>
 
             <div className="toppage-content">
