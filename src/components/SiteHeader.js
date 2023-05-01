@@ -1,4 +1,4 @@
-import { useState, useRef } from 'react'
+import { useState, useRef, useCallback } from 'react'
 import { Menu, Icon } from 'semantic-ui-react'
 import { motion, AnimatePresence } from 'framer-motion'
 import { useNavigate } from 'react-router-dom'
@@ -29,14 +29,16 @@ function SiteHeader() {
     )
   }
 
-  //useRef()を使用して、書き換え可能な値としてdocumentClickHandlerを定義する
-  const documentClickHandler = useRef((e) => {
-    if (headerMenuRef.current.contains(e.target)) {
-      return;
+  //useCallbackを使用して関数をメモ化する。メモ化しないとレンダリングの度に関数が作成される。
+  //Reactでは関数をイベントハンドラとして使う場合はメモ化していないと別関数扱いとなり、
+  //removeEventListenerで削除できず残り続けてしまう。
+  const documentClickHandler = useCallback((e) => {
+    if(headerMenuRef.current.contains(e.target)){
+      return
     }
     setIsShown(false);
-    document.removeEventListener('click', documentClickHandler.current);
-  });
+    document.removeEventListener('click', documentClickHandler);
+  }, []);
 
   const handleToggleMenu = (e) => {
     setIsShown(!isShown);
@@ -45,40 +47,40 @@ function SiteHeader() {
       //menuをクリックした際に親要素のdocumentのリスナーが即時発火してしまうことを抑止
       e.stopPropagation();
       //document要素=画面全範囲をクリックした際の処理を設定
-      document.addEventListener('click', documentClickHandler.current);
+      document.addEventListener('click', documentClickHandler);
     }
   }
 
   const handleMenuContentClick = (linkToPath) => {
-    navigate(linkToPath);
     setIsShown(false);
-    document.removeEventListener('click', documentClickHandler.current);
+    document.removeEventListener('click', documentClickHandler);
+    navigate(linkToPath);
   }
 
   return (
     <>
-        <Menu borderless>
-          <Menu.Item
-            onClick={handleClickSiteName}
-          >
-            <h4>tofTool</h4>
+      <Menu borderless>
+        <Menu.Item
+          onClick={handleClickSiteName}
+        >
+          <h4>tofTool</h4>
+        </Menu.Item>
+        <Menu.Menu position='right'>
+          <Menu.Item onClick={handleToggleMenu}>
+            <div className="header-menubar">
+              MENU
+              <Icon name='bars' />
+            </div>
           </Menu.Item>
-          <Menu.Menu position='right'>
-            <Menu.Item onClick={handleToggleMenu}>
-              <div className="header-menubar">
-                MENU
-                <Icon name='bars' />
-              </div>
-            </Menu.Item>
-          </Menu.Menu>
-        </Menu>
+        </Menu.Menu>
+      </Menu>
 
       <div
         className='header-menu'
         ref={headerMenuRef}
       >
         <AnimatePresence>
-          {isShown ? <HeaderMenu /> : null}
+          {isShown ? HeaderMenu() : null}
         </AnimatePresence>
       </div>
     </>
