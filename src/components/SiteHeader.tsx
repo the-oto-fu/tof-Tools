@@ -2,15 +2,16 @@ import { useState, useRef, useCallback } from 'react'
 import { Menu, Icon } from 'semantic-ui-react'
 import { motion, AnimatePresence } from 'framer-motion'
 import { useNavigate } from 'react-router-dom'
+import { Constants } from '../config/constants'
 
 function SiteHeader() {
 
   const [isShown, setIsShown] = useState(false);
-  const headerMenuRef = useRef();
+  const headerMenuRef = useRef<HTMLDivElement>(null);
   const navigate = useNavigate();
 
   const handleClickSiteName = () => {
-    navigate('/');
+    navigate(Constants.ScreenPath.TOP);
   }
 
   function HeaderMenu() {
@@ -22,8 +23,8 @@ function SiteHeader() {
         transition={{ duration: 0.2 }}
       >
         <Menu vertical>
-          <Menu.Item onClick={() => handleMenuContentClick('/minikuji')}>みにくじ</Menu.Item>
-          <Menu.Item onClick={() => handleMenuContentClick('/treasuremapping')}>宝の地図画像判定</Menu.Item>
+          <Menu.Item onClick={() => handleMenuContentClick(Constants.ScreenPath.MINIKUJI)}>みにくじ</Menu.Item>
+          <Menu.Item onClick={() => handleMenuContentClick(Constants.ScreenPath.TREAUSURE_MAPPING)}>宝の地図画像判定</Menu.Item>
         </Menu>
       </motion.div>
     )
@@ -32,15 +33,12 @@ function SiteHeader() {
   //useCallbackを使用して関数をメモ化する。メモ化しないとレンダリングの度に関数が作成される。
   //Reactでは関数をイベントハンドラとして使う場合はメモ化していないと別関数扱いとなり、
   //removeEventListenerで削除できず残り続けてしまう。
-  const documentClickHandler = useCallback((e) => {
-    if(headerMenuRef.current.contains(e.target)){
-      return
-    }
+  const documentClickHandler = useCallback(() => {
     setIsShown(false);
     document.removeEventListener('click', documentClickHandler);
   }, []);
 
-  const handleToggleMenu = (e) => {
+  const handleToggleMenu = (e: React.SyntheticEvent<HTMLElement>) => {
     setIsShown(!isShown);
     if (!isShown) {
       //Reactの合成イベントに対する親要素へのイベントの伝搬を抑止する
@@ -51,7 +49,7 @@ function SiteHeader() {
     }
   }
 
-  const handleMenuContentClick = (linkToPath) => {
+  const handleMenuContentClick = (linkToPath: string) => {
     setIsShown(false);
     document.removeEventListener('click', documentClickHandler);
     navigate(linkToPath);
