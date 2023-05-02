@@ -15,6 +15,14 @@ const TreasureMapping = () => {
   const [isProcessing, setIsProcessing] = useState(false);
   const [positionRegistered, setPositionRegistered] = useState(false);
 
+  const liftUpImageFile = (newImageFile: string) => {
+    setImageFile(newImageFile);
+  }
+
+  const liftUpScreenError = (newScreenError: Constants.ObjectType.ScreenError) => {
+    setScreenError(newScreenError);
+  }
+
   //選択した画像の状態が変わる(nullを含む)と他の状態も初期化する
   useEffect(() => {
     setImageExtention('');
@@ -112,8 +120,8 @@ const TreasureMapping = () => {
         :
         <Container>
           <UploadImage
-            setImageFile={(imageFile: string) => setImageFile(imageFile)}
-            setScreenError={(error: Constants.ObjectType.ScreenError) => setScreenError(error)}
+            liftUpImageFile={(newImageFile) => liftUpImageFile(newImageFile)}
+            liftUpScreenError={(error) => liftUpScreenError(error)}
           />
           <Link to={Constants.ScreenPath.OFFER_IMAGE} className="link-message">
             <Button color="teal" size="big">

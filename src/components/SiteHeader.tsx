@@ -1,4 +1,4 @@
-import { useState, useRef, useCallback } from 'react'
+import { useState, useCallback } from 'react'
 import { Menu, Icon } from 'semantic-ui-react'
 import { motion, AnimatePresence } from 'framer-motion'
 import { useNavigate } from 'react-router-dom'
@@ -7,7 +7,6 @@ import { Constants } from '../config/constants'
 function SiteHeader() {
 
   const [isShown, setIsShown] = useState(false);
-  const headerMenuRef = useRef<HTMLDivElement>(null);
   const navigate = useNavigate();
 
   const handleClickSiteName = () => {
@@ -75,7 +74,6 @@ function SiteHeader() {
 
       <div
         className='header-menu'
-        ref={headerMenuRef}
       >
         <AnimatePresence>
           {isShown ? HeaderMenu() : null}

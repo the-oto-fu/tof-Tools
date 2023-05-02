@@ -2,15 +2,31 @@ import { useState, useEffect, useRef } from "react";
 import { Button, Icon, Segment, Header } from 'semantic-ui-react'
 import { motion } from 'framer-motion'
 import { useDropzone } from 'react-dropzone'
+import { Constants } from '../../config/constants'
 import Camera from './Camera'
 
 let reader = new FileReader();
 
-function UploadImage(props) {
+type propsType = {
+    liftUpImageFile: (newImageFile: string) => void,
+    liftUpScreenError: (error: Constants.ObjectType.ScreenError) => void
+};
+
+function UploadImage(props: propsType) {
 
     const [isCameraOn, setIsCameraOn] = useState(false);
 
     const { acceptedFiles, getRootProps, getInputProps } = useDropzone()
+
+    //引数のblob画像をデータURL形式にしてStateにセットする
+    const ReadImageAsURL = async (imageFile: File) => {
+        reader.readAsDataURL(imageFile);
+        reader.onload = () => {
+            if (typeof reader.result === "string") {
+                props.liftUpImageFile(reader.result);
+            };
+        }
+    }
 
     useEffect(() => {
         if (acceptedFiles.length) {
@@ -18,13 +34,17 @@ function UploadImage(props) {
         }
     }, [acceptedFiles])
 
-
-    const imagePaste = (e) => {
+    const imagePaste = (e: ClipboardEvent) => {
+        if (e.clipboardData == null) {
+            return
+        }
         let items = Array.from(e.clipboardData.items);
         let item = items.find(x => /^image\//.test(x.type));
         if (item) {
             let image = item.getAsFile();
-            ReadImageAsURL(image);
+            if (image) {
+                ReadImageAsURL(image);
+            }
             document.removeEventListener("paste", imagePaste);
         }
     }
@@ -41,16 +61,8 @@ function UploadImage(props) {
         }
     }, []);
 
-    //引数のblob画像をデータURL形式にしてStateにセットする
-    const ReadImageAsURL = async (imageFile) => {
-        reader.readAsDataURL(imageFile);
-        reader.onload = () => {
-            props.setImageFile(reader.result);
-        };
-    }
-
-    const cameraOn = (event) => {
-        event.stopPropagation()
+    const cameraOn = (e: React.SyntheticEvent<HTMLElement>) => {
+        e.stopPropagation()
         setIsCameraOn(true);
     }
 
@@ -58,23 +70,28 @@ function UploadImage(props) {
         setIsCameraOn(false);
     }
 
-    const imageFileinputRef = useRef();
-
-    const handleChangeImageFileInput = (e) => {
+    const handleChangeImageFileInput = (e: React.ChangeEvent<HTMLInputElement>) => {
+        if (e.target.files == null) {
+            return
+        }
         ReadImageAsURL(e.target.files[0]);
         document.removeEventListener("paste", imagePaste);
     }
 
+    const imageFileinputRef = useRef<HTMLInputElement>(null);
+
     const handleClickImageSelect = () => {
-        imageFileinputRef.current.click();
+        if (imageFileinputRef.current) {
+            imageFileinputRef.current.click();
+        }
     }
 
     return (
         <>
             {isCameraOn ?
-                <Camera setImageFile={(imagefile) => props.setImageFile(imagefile)}
+                <Camera setImageFile={(imagefile: string) => props.liftUpImageFile(imagefile)}
                     cameraOff={() => cameraOff()}
-                    setScreenError={(error) => props.setScreenError(error)}
+                    setScreenError={(error: Constants.ObjectType.ScreenError) => props.liftUpScreenError(error)}
                 />
                 : null
             }
@@ -105,7 +122,6 @@ function UploadImage(props) {
                     </Segment>
                 </div>
             </motion.div>
-
         </>
     )
 }
