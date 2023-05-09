@@ -1,8 +1,9 @@
 import { useState, useEffect } from "react";
-import { Button, Container, Dropdown, Header, Dimmer, Loader, Message, Icon } from 'semantic-ui-react'
+import { Button, Container, Dropdown, DropdownProps, Header, Dimmer, Loader, Message, Icon } from 'semantic-ui-react'
 import { motion } from 'framer-motion'
 import axios from 'axios';
 import UploadImage from "./utilities/UploadImage";
+import { Constants } from '../config/constants'
 
 const mapNumberOptions = [
     { key: '1', text: '1', value: '1' },
@@ -17,9 +18,18 @@ const mapNumberOptions = [
 
 const OfferMapImage = () => {
 
-    const [imageFile, setImageFile] = useState();
+    const [imageFile, setImageFile] = useState('');
     const [positionRegistered, setPositionRegistered] = useState(false);
     const [isProcessing, setIsProcessing] = useState(false);
+    const [screenError, setScreenError] = useState<Constants.ObjectType.ScreenError | null>(null);
+
+    const liftUpImageFile = (newImageFile: string) => {
+        setImageFile(newImageFile);
+    }
+
+    const liftUpScreenError = (newScreenError: Constants.ObjectType.ScreenError) => {
+        setScreenError(newScreenError);
+    }
 
     //選択した画像の状態が変わる(nullを含む)と他の状態も初期化する
     useEffect(() => {
@@ -27,19 +37,25 @@ const OfferMapImage = () => {
     }, [imageFile])
 
     const getBase64Image = () => {
-        //正規表現を()でくくるとキャプチャグループとなり、その部分が戻り値配列の[1]移行の要素として設定される
-        //matches[0]がマッチした文字列全体、[1]が一つ目のキャプチャグループ(拡張子)、[2]が2つめのキャプチャグループ(base64内容)
-        const matches = imageFile.match(/^data:\w+\/(\w+);base64,(.*)$/);
-        return [matches[1], matches[2]];
+        if (imageFile) {
+            //正規表現を()でくくるとキャプチャグループとなり、その部分が戻り値配列の[1]移行の要素として設定される
+            //matches[0]がマッチした文字列全体、[1]が一つ目のキャプチャグループ(拡張子)、[2]が2つめのキャプチャグループ(base64内容)
+            const matches = imageFile.match(/^data:\w+\/(\w+);base64,(.*)$/);
+            if (matches && matches.length >= 2) {
+                return [matches[1], matches[2]];
+            }
+        }
+        //TODO: error throw
+        return ['', ''];
     }
 
-    const registerMapImage = (e, data) => {
+    const registerMapImage = (e: React.SyntheticEvent<HTMLElement>, data: DropdownProps) => {
         setIsProcessing(true);
 
         let tmpImageExtention, image64Content;
         [tmpImageExtention, image64Content] = getBase64Image();
 
-        axios.post('https://bh64vjmz22.execute-api.ap-northeast-1.amazonaws.com/stage/offermapimage',
+        axios.post(Constants.ApiEndpoint.FF14.OFFERMAPIMAGE,
             {
                 mapImage: image64Content,
                 imageExtention: tmpImageExtention,
@@ -70,7 +86,7 @@ const OfferMapImage = () => {
                 {imageFile ?
                     <>
                         <img className="image-preview" src={imageFile} alt="アップロードした画像のプレビュー" />
-                        <Button className="reset-button" onClick={() => setImageFile(null)}>画像を選び直す</Button>
+                        <Button className="reset-button" onClick={() => setImageFile('')}>画像を選び直す</Button>
 
                         <motion.div
                             initial={{ y: "100vh" }}
@@ -89,7 +105,7 @@ const OfferMapImage = () => {
                                         placeholder="提供する地図の番号を選択してください"
                                         className="map-number-dropdown"
                                         selection
-                                        options={mapNumberOptions}
+                                        options={Constants.DropDownOption.mapNumberOptions}
                                         onChange={registerMapImage}
                                         disabled={positionRegistered}
                                         clearable
@@ -103,19 +119,20 @@ const OfferMapImage = () => {
                     </>
                     :
                     <>
-                    <Container>
-                        <UploadImage
-                            setImageFile={(imageFile) => setImageFile(imageFile)}
-                        />
-                    </Container>
-                    
-                    <Message warning compact>
-                    <Message.Header><Icon name='exclamation circle' />スマホから撮影した画像が不足しています</Message.Header>
-                    <p>
-                      このページから画像の提供を是非お願いします🙏
-                    </p>
-                  </Message>
-                  </>
+                        <Container>
+                            <UploadImage
+                                liftUpImageFile={(newImageFile) => liftUpImageFile(newImageFile)}
+                                liftUpScreenError={(error) => liftUpScreenError(error)}
+                            />
+                        </Container>
+
+                        <Message warning compact>
+                            <Message.Header><Icon name='exclamation circle' />スマホから撮影した画像が不足しています</Message.Header>
+                            <p>
+                                このページから画像の提供を是非お願いします🙏
+                            </p>
+                        </Message>
+                    </>
                 }
             </motion.div>
         </>

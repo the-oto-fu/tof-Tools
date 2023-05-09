@@ -89,9 +89,10 @@ function UploadImage(props: propsType) {
     return (
         <>
             {isCameraOn ?
-                <Camera setImageFile={(imagefile: string) => props.liftUpImageFile(imagefile)}
+                <Camera
+                    liftUpImageFile={(imagefile) => props.liftUpImageFile(imagefile)}
                     cameraOff={() => cameraOff()}
-                    setScreenError={(error: Constants.ObjectType.ScreenError) => props.liftUpScreenError(error)}
+                    liftUpScreenError={(error) => props.liftUpScreenError(error)}
                 />
                 : null
             }
