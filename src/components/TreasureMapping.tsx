@@ -1,5 +1,5 @@
 import { useState, useEffect } from "react";
-import { Button, Container, Dimmer, Loader, Message, Dropdown, DropdownProps, Label, Icon, Header } from 'semantic-ui-react'
+import { Button, Container, Dimmer, Loader, Message, Label, Icon, Header } from 'semantic-ui-react'
 import { motion } from 'framer-motion'
 import { Link } from 'react-router-dom'
 import axios from 'axios';
@@ -9,11 +9,9 @@ import UploadImage from "./utilities/UploadImage";
 
 const TreasureMapping = () => {
   const [imageFile, setImageFile] = useState('');
-  const [imageExtention, setImageExtention] = useState('');
   const [treasurePosition, setTrasurePotision] = useState<Constants.ObjectType.TreasuremappingResponse | null>(null);
   const [screenError, setScreenError] = useState<Constants.ObjectType.ScreenError | null>(null);
   const [isProcessing, setIsProcessing] = useState(false);
-  const [positionRegistered, setPositionRegistered] = useState(false);
 
   const liftUpImageFile = (newImageFile: string) => {
     setImageFile(newImageFile);
@@ -25,11 +23,9 @@ const TreasureMapping = () => {
 
   //選択した画像の状態が変わる(nullを含む)と他の状態も初期化する
   useEffect(() => {
-    setImageExtention('');
     setTrasurePotision(null);
     setScreenError(null);
     setIsProcessing(false);
-    setPositionRegistered(false);
   }, [imageFile])
 
   const getBase64Image = () => {
@@ -49,7 +45,6 @@ const TreasureMapping = () => {
     setIsProcessing(true);
     setTrasurePotision(null);
     const [tmpImageExtention, image64Content] = getBase64Image();
-    setImageExtention(tmpImageExtention);
 
     axios.post(Constants.ApiEndpoint.FF14.G15,
       {
@@ -65,30 +60,6 @@ const TreasureMapping = () => {
         setIsProcessing(false);
         setScreenError(error);
       });
-  }
-
-  const registerPosition = (e: React.SyntheticEvent<HTMLElement>, data: DropdownProps) => {
-    if (treasurePosition) {
-      setIsProcessing(true);
-      axios.post(Constants.ApiEndpoint.FF14.REGISTERPOSITION,
-        {
-          filename: treasurePosition.requestId + '.' + imageExtention,
-          category: 'G15',
-          location: 'エルピス',
-          number: (data.value as string)
-        }
-      )
-        .then(() => {
-          setPositionRegistered(true);
-          setIsProcessing(false);
-        })
-        .catch((error) => {
-          setScreenError(error);
-        });
-    } else {
-      //TODO: throw error
-      return
-    }
   }
 
   return (
