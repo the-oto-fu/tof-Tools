@@ -1,7 +1,7 @@
 import { useState, useEffect } from "react";
 import { Button, Container, Dimmer, Loader, Message, Label, Icon, Header } from 'semantic-ui-react'
 import { motion } from 'framer-motion'
-import { Link } from 'react-router-dom'
+import { useNavigate } from 'react-router-dom'
 import axios from 'axios';
 import { Constants } from '../config/constants'
 import Help from './TreasureMappingHelp';
@@ -20,6 +20,8 @@ const TreasureMapping = () => {
   const liftUpScreenError = (newScreenError: Error) => {
     setScreenError(newScreenError);
   }
+
+  const navigate = useNavigate();
 
   //選択した画像の状態が変わる(nullを含む)と他の状態も初期化する
   useEffect(() => {
@@ -94,11 +96,9 @@ const TreasureMapping = () => {
             liftUpImageFile={(newImageFile) => liftUpImageFile(newImageFile)}
             liftUpScreenError={(error) => liftUpScreenError(error)}
           />
-          <Link to={Constants.ScreenPath.OFFER_IMAGE} className="link-message">
-            <Button color="teal" size="big">
+            <Button color="teal" size="big" onClick={() => navigate(Constants.ScreenPath.OFFER_IMAGE)}>
               画像提供はこちら<Icon name='angle double right' />
             </Button>
-          </Link>
         </Container>
       }
 
