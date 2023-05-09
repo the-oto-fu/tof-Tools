@@ -9,7 +9,7 @@ let reader = new FileReader();
 
 type propsType = {
     liftUpImageFile: (newImageFile: string) => void,
-    liftUpScreenError: (error: Constants.ObjectType.ScreenError) => void
+    liftUpScreenError: (error: Error) => void
 };
 
 function UploadImage(props: propsType) {

@@ -19,11 +19,6 @@ export namespace Constants {
 
     /** オブジェクト定義 */
     export namespace ObjectType {
-        export type ScreenError = {
-            category: string,
-            errorMessage: string
-        };
-
         export type TreasuremappingResponse = {
             mapNumber: string,
             position: string,

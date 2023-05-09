@@ -10,13 +10,13 @@ const OfferMapImage = () => {
     const [imageFile, setImageFile] = useState('');
     const [positionRegistered, setPositionRegistered] = useState(false);
     const [isProcessing, setIsProcessing] = useState(false);
-    const [screenError, setScreenError] = useState<Constants.ObjectType.ScreenError | null>(null);
+    const [screenError, setScreenError] = useState<Error | null>(null);
 
     const liftUpImageFile = (newImageFile: string) => {
         setImageFile(newImageFile);
     }
 
-    const liftUpScreenError = (newScreenError: Constants.ObjectType.ScreenError) => {
+    const liftUpScreenError = (newScreenError: Error) => {
         setScreenError(newScreenError);
     }
 

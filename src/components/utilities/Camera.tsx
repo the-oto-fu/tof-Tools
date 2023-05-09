@@ -4,7 +4,7 @@ import { Constants } from '../../config/constants'
 
 type propsType = {
   liftUpImageFile: (newImageFile: string) => void,
-  liftUpScreenError: (error: Constants.ObjectType.ScreenError) => void,
+  liftUpScreenError: (error: Error) => void,
   cameraOff: () => void
 };
 
@@ -26,6 +26,7 @@ const Camera = (props: propsType) => {
         }
         )
         .catch((e) => {
+          props.cameraOff();
           props.liftUpScreenError(e);
         })
     };
