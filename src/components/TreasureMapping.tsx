@@ -150,23 +150,7 @@ const TreasureMapping = () => {
             【{treasurePosition.mapNumber}】{treasurePosition.position}
           </Label>
           <div className="overview-container">
-            {
-              positionRegistered
-                ? <div className="gaming map-number-dropdown">Thank you!!</div>
-                :
-                <Dropdown
-                  placeholder="データ収集のため、正解の番号を選択してください🤗"
-                  selection
-                  options={Constants.DropDownOption.mapNumberOptions}
-                  className="map-number-dropdown"
-                  onChange={registerPosition}
-                  disabled={positionRegistered}
-                  clearable
-                  //下記は何も選択しない際に1つ目のオプションが選択されるのを防止するため
-                  selectOnBlur={false}
-                />
-            }
-            <img className="map-overview" src="/treasuremapping/overview_g15.png" alt="全体の地図" />
+          <img className="map-overview" src="/treasuremapping/overview_g15.png" alt="全体の地図" />
           </div>
         </motion.div>
         : null}
