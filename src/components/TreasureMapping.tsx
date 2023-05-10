@@ -3,9 +3,10 @@ import { Button, Container, Dimmer, Loader, Message, Label, Icon, Header } from 
 import { motion } from 'framer-motion'
 import { useNavigate } from 'react-router-dom'
 import axios from 'axios';
-import { Constants } from '../config/constants'
+import { Constants } from '../common/constants'
+import { getBase64Image } from '../common/commonFunction'
 import Help from './TreasureMappingHelp';
-import UploadImage from "./utilities/UploadImage";
+import UploadImage from './utilities/UploadImage';
 
 const TreasureMapping = () => {
   const [imageFile, setImageFile] = useState('');
@@ -30,23 +31,10 @@ const TreasureMapping = () => {
     setIsProcessing(false);
   }, [imageFile])
 
-  const getBase64Image = () => {
-    if (imageFile) {
-      //正規表現を()でくくるとキャプチャグループとなり、その部分が戻り値配列の[1]移行の要素として設定される
-      //matches[0]がマッチした文字列全体、[1]が一つ目のキャプチャグループ(拡張子)、[2]が2つめのキャプチャグループ(base64内容)
-      const matches = imageFile.match(/^data:\w+\/(\w+);base64,(.*)$/);
-      if (matches && matches.length >= 2) {
-        return [matches[1], matches[2]];
-      }
-    }
-    //TODO: error throw
-    return ['', ''];
-  }
-
   const identifyTreasurePosition = () => {
     setIsProcessing(true);
     setTrasurePotision(null);
-    const [tmpImageExtention, image64Content] = getBase64Image();
+    const [tmpImageExtention, image64Content] = getBase64Image(imageFile);
 
     axios.post(Constants.ApiEndpoint.FF14.G15,
       {

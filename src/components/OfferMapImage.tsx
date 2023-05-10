@@ -3,7 +3,8 @@ import { Button, Container, Dropdown, DropdownProps, Header, Dimmer, Loader, Mes
 import { motion } from 'framer-motion'
 import axios from 'axios';
 import UploadImage from "./utilities/UploadImage";
-import { Constants } from '../config/constants'
+import { Constants } from '../common/constants'
+import { getBase64Image } from '../common/commonFunction'
 
 const OfferMapImage = () => {
 
@@ -25,24 +26,11 @@ const OfferMapImage = () => {
         setPositionRegistered(false);
     }, [imageFile])
 
-    const getBase64Image = () => {
-        if (imageFile) {
-            //正規表現を()でくくるとキャプチャグループとなり、その部分が戻り値配列の[1]移行の要素として設定される
-            //matches[0]がマッチした文字列全体、[1]が一つ目のキャプチャグループ(拡張子)、[2]が2つめのキャプチャグループ(base64内容)
-            const matches = imageFile.match(/^data:\w+\/(\w+);base64,(.*)$/);
-            if (matches && matches.length >= 2) {
-                return [matches[1], matches[2]];
-            }
-        }
-        //TODO: error throw
-        return ['', ''];
-    }
-
     const registerMapImage = (e: React.SyntheticEvent<HTMLElement>, data: DropdownProps) => {
         setIsProcessing(true);
 
         let tmpImageExtention, image64Content;
-        [tmpImageExtention, image64Content] = getBase64Image();
+        [tmpImageExtention, image64Content] = getBase64Image(imageFile);
 
         axios.post(Constants.ApiEndpoint.FF14.OFFERMAPIMAGE,
             {
@@ -116,9 +104,9 @@ const OfferMapImage = () => {
                         </Container>
 
                         <Message warning compact>
-                            <Message.Header><Icon name='exclamation circle' />スマホから撮影した画像が不足しています</Message.Header>
+                            <Message.Header><Icon name='exclamation circle' />こちらは画像の提供だけを行うページです</Message.Header>
                             <p>
-                                このページから画像の提供を是非お願いします🙏
+                                スマホで撮影した画像が不足しているので、是非提供をお願いします🙏
                             </p>
                         </Message>
                     </>

@@ -2,7 +2,7 @@ import { useState, useEffect, useRef } from "react";
 import { Button, Icon, Segment, Header } from 'semantic-ui-react'
 import { motion } from 'framer-motion'
 import { useDropzone } from 'react-dropzone'
-import { Constants } from '../../config/constants'
+import { Constants } from '../../common/constants'
 import Camera from './Camera'
 
 let reader = new FileReader();

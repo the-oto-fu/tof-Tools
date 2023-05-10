@@ -1,3 +1,5 @@
+//export namespace nameでnameという名前付きの塊をexportする
+//import, exportを使うとTree shakingが効いて使用されていないコードがwebpackでバンドルされなくなるとのこと
 export namespace Constants {
     /** 画面パス */
     export namespace ScreenPath {

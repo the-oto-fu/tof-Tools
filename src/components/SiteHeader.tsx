@@ -2,7 +2,7 @@ import { useState, useCallback } from 'react'
 import { Menu, Icon } from 'semantic-ui-react'
 import { motion, AnimatePresence } from 'framer-motion'
 import { useNavigate } from 'react-router-dom'
-import { Constants } from '../config/constants'
+import { Constants } from '../common/constants'
 
 function SiteHeader() {
 
