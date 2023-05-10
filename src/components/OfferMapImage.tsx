@@ -1,10 +1,10 @@
-import { useState, useEffect } from "react";
+import { useState, useEffect } from "react"
 import { Button, Container, Dropdown, DropdownProps, Header, Dimmer, Loader, Message, Icon } from 'semantic-ui-react'
 import { motion } from 'framer-motion'
-import axios from 'axios';
-import UploadImage from "./utilities/UploadImage";
+import axios from 'axios'
+import UploadImage from "./utilities/UploadImage"
 import { Constants } from '../common/constants'
-import { getBase64Image } from '../common/commonFunction'
+import { getBase64Image } from '../common/functions'
 
 const OfferMapImage = () => {
 

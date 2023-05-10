@@ -1,12 +1,12 @@
-import { useState, useEffect } from "react";
+import { useState, useEffect } from "react"
 import { Button, Container, Dimmer, Loader, Message, Label, Icon, Header } from 'semantic-ui-react'
 import { motion } from 'framer-motion'
 import { useNavigate } from 'react-router-dom'
-import axios from 'axios';
+import axios from 'axios'
 import { Constants } from '../common/constants'
-import { getBase64Image } from '../common/commonFunction'
-import Help from './TreasureMappingHelp';
-import UploadImage from './utilities/UploadImage';
+import { getBase64Image } from '../common/functions'
+import Help from './TreasureMappingHelp'
+import UploadImage from './utilities/UploadImage'
 
 const TreasureMapping = () => {
   const [imageFile, setImageFile] = useState('');
@@ -24,7 +24,7 @@ const TreasureMapping = () => {
 
   const navigate = useNavigate();
 
-  //選択した画像の状態が変わる(nullを含む)と他の状態も初期化する
+  //選択した画像の状態が変わる(null初期化を含む)と他の状態も初期化する
   useEffect(() => {
     setTrasurePotision(null);
     setScreenError(null);
