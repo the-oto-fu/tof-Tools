@@ -1,9 +1,8 @@
 import { useState, useEffect, useRef } from "react";
 import { Button, Icon, Segment, Header } from 'semantic-ui-react'
-import { motion } from 'framer-motion'
 import { useDropzone } from 'react-dropzone'
-import { Constants } from '../../common/constants'
 import Camera from './Camera'
+import { OpacityMotion } from '../utilities/Motion'
 
 let reader = new FileReader();
 
@@ -97,11 +96,7 @@ function UploadImage(props: propsType) {
                 : null
             }
 
-            <motion.div
-                animate={{ opacity: 1 }}
-                initial={{ opacity: 0 }}
-                transition={{ duration: 0.2 }}
-            >
+            <OpacityMotion>
                 <div {...getRootProps({ className: 'dropzone' })} onClick={(e) => e.stopPropagation()}>
                     <input
                         {...getInputProps()}
@@ -122,7 +117,7 @@ function UploadImage(props: propsType) {
                         </div>
                     </Segment>
                 </div>
-            </motion.div>
+            </OpacityMotion>
         </>
     )
 }

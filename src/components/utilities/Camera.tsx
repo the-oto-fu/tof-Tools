@@ -1,6 +1,5 @@
 import { useState, useRef, useCallback, useEffect } from 'react'
 import { Icon, Dimmer } from 'semantic-ui-react'
-import { Constants } from '../../common/constants'
 
 type propsType = {
   liftUpImageFile: (newImageFile: string) => void,

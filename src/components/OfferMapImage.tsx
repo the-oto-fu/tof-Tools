@@ -1,10 +1,10 @@
 import { useState, useEffect } from "react"
 import { Button, Container, Dropdown, DropdownProps, Header, Dimmer, Loader, Message, Icon } from 'semantic-ui-react'
-import { motion } from 'framer-motion'
 import axios from 'axios'
 import UploadImage from "./utilities/UploadImage"
 import { Constants } from '../common/constants'
 import { getBase64Image } from '../common/functions'
+import { OpacityMotion, SpringUpMotion } from './utilities/Motion'
 
 const OfferMapImage = () => {
 
@@ -55,26 +55,14 @@ const OfferMapImage = () => {
                 ? <Dimmer active inverted><Loader>処理中…</Loader></Dimmer>
                 : null}
             <Header as='h1'>画像提供専用ページ{'<G15>'}</Header>
-            <motion.div
-                animate={{ opacity: 1 }}
-                initial={{ opacity: 0 }}
-                transition={{ duration: 0.2 }}
-            >
+            <OpacityMotion>
                 {imageFile ?
                     <>
                         <img className="image-preview" src={imageFile} alt="アップロードした画像のプレビュー" />
                         <Button className="reset-button" onClick={() => setImageFile('')}>画像を選び直す</Button>
 
-                        <motion.div
-                            initial={{ y: "100vh" }}
-                            animate={{
-                                y: "0",
-                                transitionEnd: {
-                                    transform: "none"
-                                }
-                            }}
-                            transition={{ type: "spring", stiffness: 80 }}
-                        >                        <div className="overview-container">
+                        <SpringUpMotion>
+                            <div className="overview-container">
                                 {positionRegistered ?
                                     <div className="gaming thanks">Thank you!!</div>
                                     :
@@ -92,7 +80,7 @@ const OfferMapImage = () => {
                                 }
                                 <img className="map-overview" src="/treasuremapping/overview_g15.png" alt="全体の地図" />
                             </div>
-                        </motion.div>
+                        </SpringUpMotion>
                     </>
                     :
                     <>
@@ -111,7 +99,7 @@ const OfferMapImage = () => {
                         </Message>
                     </>
                 }
-            </motion.div>
+            </OpacityMotion>
         </>
     )
 }

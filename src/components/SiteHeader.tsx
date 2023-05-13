@@ -1,8 +1,9 @@
 import { useState, useCallback } from 'react'
 import { Menu, Icon } from 'semantic-ui-react'
-import { motion, AnimatePresence } from 'framer-motion'
+import { AnimatePresence } from 'framer-motion'
 import { useNavigate } from 'react-router-dom'
 import { Constants } from '../common/constants'
+import { OpacityMotion } from './utilities/Motion'
 
 function SiteHeader() {
 
@@ -13,19 +14,16 @@ function SiteHeader() {
     navigate(Constants.ScreenPath.TOP);
   }
 
+  //JSXの一部分を関数に切り出している。
+  //呼び出す際には外部で定義したコンポーネントと区別するために{関数名()}で呼び出している。
   function HeaderMenu() {
     return (
-      <motion.div
-        animate={{ opacity: 1 }}
-        initial={{ opacity: 0 }}
-        exit={{ opacity: 0 }}
-        transition={{ duration: 0.2 }}
-      >
+      <OpacityMotion>
         <Menu vertical>
-          <Menu.Item onClick={() => handleMenuContentClick(Constants.ScreenPath.MINIKUJI)}>みにくじ</Menu.Item>
-          <Menu.Item onClick={() => handleMenuContentClick(Constants.ScreenPath.TREAUSURE_MAPPING)}>宝の地図画像判定</Menu.Item>
+          <Menu.Item onClick={() => navigateMenuContent(Constants.ScreenPath.MINIKUJI)}>みにくじ</Menu.Item>
+          <Menu.Item onClick={() => navigateMenuContent(Constants.ScreenPath.TREAUSURE_MAPPING)}>宝の地図画像判定</Menu.Item>
         </Menu>
-      </motion.div>
+      </OpacityMotion>
     )
   }
 
@@ -33,6 +31,7 @@ function SiteHeader() {
   //Reactでは関数をイベントハンドラとして使う場合はメモ化していないと別関数扱いとなり、
   //removeEventListenerで削除できず残り続けてしまう。
   const documentClickHandler = useCallback(() => {
+    console.log('document')
     setIsShown(false);
     document.removeEventListener('click', documentClickHandler);
   }, []);
@@ -48,7 +47,7 @@ function SiteHeader() {
     }
   }
 
-  const handleMenuContentClick = (linkToPath: string) => {
+  const navigateMenuContent = (linkToPath: string) => {
     setIsShown(false);
     document.removeEventListener('click', documentClickHandler);
     navigate(linkToPath);

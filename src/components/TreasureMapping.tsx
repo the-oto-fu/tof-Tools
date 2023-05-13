@@ -1,12 +1,12 @@
 import { useState, useEffect } from "react"
 import { Button, Container, Dimmer, Loader, Message, Label, Icon, Header } from 'semantic-ui-react'
-import { motion } from 'framer-motion'
 import { useNavigate } from 'react-router-dom'
 import axios from 'axios'
 import { Constants } from '../common/constants'
 import { getBase64Image } from '../common/functions'
 import Help from './TreasureMappingHelp'
 import UploadImage from './utilities/UploadImage'
+import { OpacityMotion, SpringUpMotion } from './utilities/Motion'
 
 const TreasureMapping = () => {
   const [imageFile, setImageFile] = useState('');
@@ -64,11 +64,7 @@ const TreasureMapping = () => {
         : null}
 
       {imageFile ?
-        <motion.div
-          animate={{ opacity: 1 }}
-          initial={{ opacity: 0 }}
-          transition={{ duration: 0.2 }}
-        >
+        <OpacityMotion>
           <img className="image-preview" src={imageFile} alt="アップロードした画像のプレビュー" />
           <Button className="reset-button" onClick={() => setImageFile('')}>画像を選び直す</Button>
           {treasurePosition
@@ -77,7 +73,7 @@ const TreasureMapping = () => {
             :
             <Button color='green' onClick={identifyTreasurePosition}>座標を特定!</Button>
           }
-        </motion.div>
+        </OpacityMotion>
         :
         <Container>
           <UploadImage
@@ -94,16 +90,7 @@ const TreasureMapping = () => {
         ? <Dimmer active inverted><Loader>処理中…</Loader></Dimmer>
         : null}
       {treasurePosition != null ?
-        <motion.div
-          initial={{ y: "100vh" }}
-          animate={{
-            y: "0",
-            transitionEnd: {
-              transform: "none"
-            }
-          }}
-          transition={{ type: "spring", stiffness: 80 }}
-        >
+        <SpringUpMotion>
           <div>この地図の座標は…</div>
           <Label color="pink" size="big" tag>
             【{treasurePosition.mapNumber}】{treasurePosition.position}
@@ -111,7 +98,7 @@ const TreasureMapping = () => {
           <div className="overview-container">
           <img className="map-overview" src="/treasuremapping/overview_g15.png" alt="全体の地図" />
           </div>
-        </motion.div>
+        </SpringUpMotion>
         : null}
     </>
   )

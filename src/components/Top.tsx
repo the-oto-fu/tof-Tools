@@ -1,12 +1,8 @@
-import { motion } from 'framer-motion'
+import { OpacityMotion }  from './utilities/Motion'
 
 function Top() {
     return (
-        <motion.div
-            animate={{ opacity: 1 }}
-            initial={{ opacity: 0 }}
-            transition={{ duration: 0.2 }}
-        >
+        <OpacityMotion>
             <div className="shapes">
                 <div className="shape shape1"></div>
                 <div className="shape shape2"></div>
@@ -19,7 +15,7 @@ function Top() {
                     工事中で〜す
                 </p>
             </div>
-        </motion.div>
+        </OpacityMotion>
     )
 }
 
