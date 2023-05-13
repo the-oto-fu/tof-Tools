@@ -1,4 +1,4 @@
-import { useState, useCallback } from 'react'
+import { useState, useCallback, useRef } from 'react'
 import { Menu, Icon } from 'semantic-ui-react'
 import { AnimatePresence } from 'framer-motion'
 import { useNavigate } from 'react-router-dom'
@@ -9,6 +9,7 @@ function SiteHeader() {
 
   const [isShown, setIsShown] = useState(false);
   const navigate = useNavigate();
+  const headerMenuRef = useRef<HTMLDivElement | null>(null);;
 
   const handleClickSiteName = () => {
     navigate(Constants.ScreenPath.TOP);
@@ -30,15 +31,21 @@ function SiteHeader() {
   //useCallbackを使用して関数をメモ化する。メモ化しないとレンダリングの度に関数が作成される。
   //Reactでは関数をイベントハンドラとして使う場合はメモ化していないと別関数扱いとなり、
   //removeEventListenerで削除できず残り続けてしまう。
-  const documentClickHandler = useCallback(() => {
-    console.log('document')
+  //引数のeはReact.MouseEvent<HTMLBodyElement>で型指定するとオーバーロード不可エラーとなった
+  const documentClickHandler = useCallback((e: MouseEvent) => {
+    if (headerMenuRef.current && headerMenuRef.current.contains(e.target as Node)) {
+      return
+    }
     setIsShown(false);
     document.removeEventListener('click', documentClickHandler);
   }, []);
 
   const handleToggleMenu = (e: React.SyntheticEvent<HTMLElement>) => {
     setIsShown(!isShown);
-    if (!isShown) {
+    if (isShown) {
+      document.removeEventListener('click', documentClickHandler);
+    }
+    else {
       //Reactの合成イベントに対する親要素へのイベントの伝搬を抑止する
       //menuをクリックした際に親要素のdocumentのリスナーが即時発火してしまうことを抑止
       e.stopPropagation();
@@ -73,6 +80,7 @@ function SiteHeader() {
 
       <div
         className='header-menu'
+        ref={headerMenuRef}
       >
         <AnimatePresence>
           {isShown ? HeaderMenu() : null}
